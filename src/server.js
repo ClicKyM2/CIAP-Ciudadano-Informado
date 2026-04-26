@@ -32,6 +32,9 @@ app.use(cors());
 app.use(express.json());
 app.use(limiterGeneral);
 
+// Healthcheck liviano — no consulta tablas
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
 // Registro de Rutas
 app.use('/api/candidatos', limiterBusqueda, candidatosRoutes);
 app.get('/api/stats', getStats);
