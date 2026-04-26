@@ -1,0 +1,113 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{font-family:var(--font-sans);padding:1rem 0;max-width:860px}
+.section-label{font-size:11px;font-weight:500;color:var(--color-text-tertiary);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem;margin-top:1.2rem}
+.section-label:first-child{margin-top:0}
+.row{display:grid;gap:8px;margin-bottom:8px}
+.row-3{grid-template-columns:repeat(3,1fr)}
+.row-2{grid-template-columns:repeat(2,1fr)}
+.row-1{grid-template-columns:1fr}
+.card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.85rem 1rem;border-left:3px solid}
+.card-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:.3rem}
+.card-sub{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:99px;margin-bottom:.4rem}
+.num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:500;margin-right:6px;flex-shrink:0;vertical-align:middle}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:1rem 0}
+</style>
+<div class="wrap">
+
+<div class="section-label">Plan A — Fortalecer la IA fiscalizadora</div>
+<div class="row row-3">
+  <div class="card" style="border-color:#1A6B3C">
+    <div class="badge" style="background:#E1F5EE;color:#085041">Paso 1 — Hoy</div>
+    <div class="card-title">Subir umbral de similitud</div>
+    <div class="card-sub">Cambiar de 0.6 a 0.75 en <code>ia_fiscalizadora.py</code> para reducir falsos positivos en matching de nombres</div>
+  </div>
+  <div class="card" style="border-color:#1A6B3C">
+    <div class="badge" style="background:#E1F5EE;color:#085041">Paso 2 — Esta semana</div>
+    <div class="card-title">Agregar cruce por RUT</div>
+    <div class="card-sub">Cuando hay RUT disponible, ignorar similitud de nombre y cruzar directo por RUT. Elimina casi todos los falsos positivos</div>
+  </div>
+  <div class="card" style="border-color:#1A6B3C">
+    <div class="badge" style="background:#E1F5EE;color:#085041">Paso 3 — Esta semana</div>
+    <div class="card-title">Clasificar gravedad de alertas</div>
+    <div class="card-sub">Alta = mismo RUT empresa + lobby reciente. Media = nombre similar + lobby. Baja = solo participación societaria sin lobby</div>
+  </div>
+</div>
+
+<div class="row row-2">
+  <div class="card" style="border-color:#BA7517">
+    <div class="badge" style="background:#FAEEDA;color:#633806">Paso 4 — Próximas 2 semanas</div>
+    <div class="card-title">Vínculos familiares entre funcionarios</div>
+    <div class="card-sub">Nueva tabla <code>relacion_familiar</code> con pares de candidato_id y tipo de parentesco. Cruzar lobby de empresas de familiares con decisiones del funcionario. Ejemplo: Felipe Kast tiene 13 empresas → ¿José Antonio votó o actuó a su favor?</div>
+  </div>
+  <div class="card" style="border-color:#BA7517">
+    <div class="badge" style="background:#FAEEDA;color:#633806">Paso 5 — Próximas 2 semanas</div>
+    <div class="card-title">Pipeline diario automático</div>
+    <div class="card-sub">Cron job que descarga fuentes (CPLT, lobby, Servel) cada 24h, re-ejecuta la IA fiscalizadora y actualiza alertas. Sin esto los datos se vuelven obsoletos</div>
+  </div>
+</div>
+
+<div class="row row-1">
+  <div class="card" style="border-color:#A32D2D">
+    <div class="badge" style="background:#FCEBEB;color:#501313">Paso 6 — Cuando tengas el ticket API</div>
+    <div class="card-title">Integrar Mercado Público — licitaciones</div>
+    <div class="card-sub">Cruzar empresas del funcionario con licitaciones adjudicadas. Detectar si una empresa donde tiene acciones ganó contratos mientras él estaba en el cargo. Es el hallazgo más potente del sistema</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section-label">Plan B — Lo que falta para que la UI muestre lo mismo que el prototipo ideal</div>
+
+<div class="row row-3">
+  <div class="card" style="border-color:#1A6B3C">
+    <div class="badge" style="background:#E1F5EE;color:#085041">UI 1 — Alta prioridad</div>
+    <div class="card-title">Score de transparencia</div>
+    <div class="card-sub">Calcular % real basado en: declaraciones completas en CPLT, reuniones de lobby registradas, asistencia al cargo. Agregar columna a tabla <code>candidato</code></div>
+  </div>
+  <div class="card" style="border-color:#1A6B3C">
+    <div class="badge" style="background:#E1F5EE;color:#085041">UI 2 — Alta prioridad</div>
+    <div class="card-title">Tab Patrimonio</div>
+    <div class="card-sub">Mostrar bienes declarados en InfoProbidad: bienes raíces, vehículos, cuentas bancarias, deudas. Datos ya existen en <code>csvdeclaraciones.csv</code></div>
+  </div>
+  <div class="card" style="border-color:#1A6B3C">
+    <div class="badge" style="background:#E1F5EE;color:#085041">UI 3 — Alta prioridad</div>
+    <div class="card-title">Tab Partido y tendencia</div>
+    <div class="card-sub">Mostrar partido político, bloque (izquierda/derecha/centro) y color político. Poblar tabla <code>partido</code> con los datos de Servel ya integrados</div>
+  </div>
+</div>
+
+<div class="row row-3">
+  <div class="card" style="border-color:#BA7517">
+    <div class="badge" style="background:#FAEEDA;color:#633806">UI 4 — Media prioridad</div>
+    <div class="card-title">Tab Votaciones</div>
+    <div class="card-sub">Historial de votaciones en el Congreso. Requiere integrar la fuente pendiente del Congreso (asistencia y votaciones)</div>
+  </div>
+  <div class="card" style="border-color:#BA7517">
+    <div class="badge" style="background:#FAEEDA;color:#633806">UI 5 — Media prioridad</div>
+    <div class="card-title">Tab Causas judiciales</div>
+    <div class="card-sub">Listar causas legales o investigaciones públicas asociadas al funcionario. Requiere fuente externa (Poder Judicial o prensa)</div>
+  </div>
+  <div class="card" style="border-color:#BA7517">
+    <div class="badge" style="background:#FAEEDA;color:#633806">UI 6 — Media prioridad</div>
+    <div class="card-title">Comparar candidatos</div>
+    <div class="card-sub">Seleccionar 2-3 candidatos y comparar scores, empresas, alertas lado a lado. El tab "Comparar" ya existe en el prototipo</div>
+  </div>
+</div>
+
+<div class="row row-2">
+  <div class="card" style="border-color:#A32D2D">
+    <div class="badge" style="background:#FCEBEB;color:#501313">UI 7 — Siguiente fase</div>
+    <div class="card-title">Deploy público + dominio</div>
+    <div class="card-sub">Vercel para el HTML, Railway para Node.js + PostgreSQL. Sin esto solo tú puedes verlo</div>
+  </div>
+  <div class="card" style="border-color:#A32D2D">
+    <div class="badge" style="background:#FCEBEB;color:#501313">UI 8 — Siguiente fase</div>
+    <div class="card-title">Chatbot en lenguaje natural</div>
+    <div class="card-sub">"¿Quién ha tenido más reuniones de lobby con empresas mineras?" — conectar Claude API directamente a tu PostgreSQL</div>
+  </div>
+</div>
+
+</div>

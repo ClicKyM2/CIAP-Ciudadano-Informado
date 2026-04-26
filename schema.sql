@@ -25,7 +25,8 @@ CREATE TABLE candidato (
     partido_id INTEGER REFERENCES partido(id),
     cargo_id INTEGER REFERENCES cargo(id),
     institucion_id INTEGER REFERENCES institucion(id),
-    score_transparencia INTEGER DEFAULT 100
+    score_transparencia INTEGER DEFAULT 100,
+    uri_declarante VARCHAR(255)
 );
 
 -- Tabla: Patrimonio (Empresas del político extraídas del CPLT)
@@ -63,3 +64,26 @@ CREATE TABLE alerta_probidad (
 );
 CREATE INDEX idx_alerta_candidato ON alerta_probidad(candidato_id);
 CREATE INDEX idx_alerta_gravedad ON alerta_probidad(gravedad);
+
+-- Tabla: Órdenes de Compra de Mercado Público (empresas de candidatos como proveedores)
+CREATE TABLE orden_compra (
+    id SERIAL PRIMARY KEY,
+    codigo VARCHAR(50),
+    nombre TEXT,
+    estado VARCHAR(100),
+    fecha_creacion DATE,
+    monto_pesos BIGINT,
+    rut_organismo VARCHAR(15),
+    nombre_organismo TEXT,
+    rut_proveedor VARCHAR(15),
+    nombre_proveedor TEXT,
+    codigo_licitacion VARCHAR(50),
+    link TEXT,
+    anio SMALLINT,
+    mes SMALLINT,
+    candidato_id INTEGER REFERENCES candidato(id),
+    UNIQUE(codigo, anio, mes)
+);
+CREATE INDEX idx_oc_candidato ON orden_compra(candidato_id);
+CREATE INDEX idx_oc_rut_proveedor ON orden_compra(rut_proveedor);
+CREATE INDEX idx_oc_fecha ON orden_compra(fecha_creacion);

@@ -1,0 +1,172 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.w{font-family:var(--font-sans);padding:.75rem;max-width:960px;margin:0 auto}
+.titulo{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem}
+.subtitulo{font-size:11px;color:var(--color-text-tertiary);margin-bottom:1rem}
+.capa{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem;margin-bottom:.75rem;border-left:4px solid}
+.capa-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
+.capa-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.pct{font-size:13px;font-weight:500}
+.bar-wrap{height:8px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden;margin-bottom:.75rem}
+.bar-fill{height:100%;border-radius:99px;transition:width 0.5s}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px}
+.item{font-size:11px;padding:5px 8px;border-radius:var(--border-radius-md);display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.item-text{color:var(--color-text-secondary);line-height:1.4}
+.next-section{margin-top:.75rem;padding:.75rem;background:var(--color-background-secondary);border-radius:var(--border-radius-md)}
+.next-title{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.next-item{font-size:11px;color:var(--color-text-secondary);padding:3px 0;display:flex;align-items:start;gap:6px}
+.update-note{font-size:10px;color:var(--color-text-tertiary);margin-top:1rem;padding:.5rem .75rem;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md)}
+</style>
+
+<div class="w">
+<div class="titulo">Estado del proyecto — Ciudadano Informado (CIAP)</div>
+<div class="subtitulo">Ultima actualizacion: 2026-04-25 (sesion 14 — Obsidian knowledge graph completo: 17 notas nuevas (arquitectura/, scripts/, src/, db/, fuentes/) con lineaje visual fuente->extractor->DB->API->frontend. CLAUDE.md R2 reforzada: tabla automatica de que nota crear segun cada accion. R1 actualizada: gemini-search en vez de Tavily. Hook Stop agregado: resumen automatico de sesion en diario/ al cerrar Claude. obsidian_logger.py extendido con session_end. Mapa_Proyecto.md como hub maximo del grafo.)</div>
+
+<div class="capa" style="border-color:#1A6B3C">
+  <div class="capa-header">
+    <span class="capa-title">Capa 1 — Fuentes de datos publicas</span>
+    <span class="pct" style="color:#1A6B3C">99%</span>
+  </div>
+  <div class="bar-wrap"><div class="bar-fill" style="width:99%;background:#1A6B3C"></div></div>
+  <div class="items">
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">CPLT — declaraciones (118K, Kast parcial), acciones (48K), actividades</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Ley de Lobby — 894K audiencias, 1.5M representaciones</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Servel — alcaldes, concejales, gobernadores 2024</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Congreso — 7.180 votaciones, 947K votos, 1.125 sesiones (leg 50-58)</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">SII — 2.782/2.782 empresas enriquecidas via csvacciones.csv (100%)</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">CMF — 5.665 registros directorio_cmf. 5 alertas DIRECTOR_NO_DECLARADO generadas.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Mercado Publico OC — streaming Azure Blob sin ticket. 138.339 OCs de candidatos (2022-2026).</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">SERVEL financiamiento electoral 2024 — Excel definitivo descargado automaticamente. 338.911 transacciones, 2.402 candidatos vinculados, 12.255 donantes unicos.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Gobierno Kast — 118.760 declaraciones importadas. +116 nuevos candidatos (6.801 total). Scores recalculados (promedio 46.5).</div></div>
+    <div class="item" style="background:var(--color-background-warning)"><div class="dot" style="background:#BA7517"></div><div class="item-text">Mercado Publico licitaciones — 28 meses completados (hasta 2022-04). Pendiente continuar desde 2022-05 via API OCDS. 2.178 licitaciones, 178 candidatos matcheados.</div></div>
+  </div>
+</div>
+
+<div class="capa" style="border-color:#1A6B3C">
+  <div class="capa-header">
+    <span class="capa-title">Capa 2 — Ingesta, normalizacion e IA</span>
+    <span class="pct" style="color:#1A6B3C">96%</span>
+  </div>
+  <div class="bar-wrap"><div class="bar-fill" style="width:96%;background:#1A6B3C"></div></div>
+  <div class="items">
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">6.801 funcionarios cargados (+116 Gobierno Kast). 5.601 con RUT real. 6.513 con uri_declarante. Score promedio 46.5.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">503K matches candidato-lobby. 6.903 participaciones societarias. 2.556 candidatos con empresas declaradas.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">IA fiscalizadora — 3 detectores: AUTOLOBBY (30), CONFLICTO_FAMILIAR (~563), DONANTE_PROVEEDOR (10). Total ~608 alertas. Anti-falsos-positivos: APELLIDOS_COMUNES, NOMBRES_PILA, MAX_POR_APELLIDO=10.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">6.685 candidatos con score_transparencia — verde: 1.412, amarillo: 2.138, rojo: 2.009 (promedio 42.6)</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Congreso — 7.180 votaciones, 947K votos, 376K asistencia (leg 50-58 completo)</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">118.760 declaraciones CPLT importadas. 6.513 candidatos vinculados a CPLT.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">138.339 OCs Mercado Publico (2022-2026). Candidatos como proveedores del estado.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Financiamiento SERVEL — ingesta_financiamiento_servel.py. Tablas: financiamiento_electoral (15.739), donante_electoral (338.911). Match por nombre+cargo+territorio (3 niveles fallback).</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Pipeline maestro — 18 pasos (limpiar_servel eliminado), flags --estado/--lista/--solo/--pasos/--desde/--forzar/--backup. Backup automatico: data/backups/YYYY-MM-DD_HHMM/ + pg_dump. Deteccion automatica CSV declaraciones por conteo filas. LOBBY_DIR configurable.</div></div>
+    <div class="item" style="background:var(--color-background-warning)"><div class="dot" style="background:#BA7517"></div><div class="item-text">Licitaciones Mercado Publico — 28/N meses completados (hasta 2022-04). Pendiente correr desde 2022-05. Bug monto corregido: cap 500B CLP en extractor, 1 fila corrupta limpiada.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">RUTs completados: +133 rescatados (5.601 total). 884 sin RUT visible en CPLT — no resoluble (privacidad).</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Participaciones completadas: +109 filas (6.903 total, 2.556 candidatos con empresas). Scripts corregidos: cloudscraper + JOIN declaracion_cplt.</div></div>
+  </div>
+</div>
+
+<div class="capa" style="border-color:#1A6B3C">
+  <div class="capa-header">
+    <span class="capa-title">Capa 3 — API REST</span>
+    <span class="pct" style="color:#1A6B3C">95%</span>
+  </div>
+  <div class="bar-wrap"><div class="bar-fill" style="width:95%;background:#1A6B3C"></div></div>
+  <div class="items">
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">GET /api/candidatos?q=&cargo=&page= — busqueda paginada con filtro cargo server-side</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">GET /api/candidatos/:id — perfil con empresas, lobby, alertas y score</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">GET /api/candidatos/:id/patrimonio — historial declaraciones CPLT (113K)</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">GET /api/candidatos/:id/congreso — votaciones y asistencia por legislatura</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">GET /api/candidatos/:id/ordenes — OCs paginadas con resumen (monto, organismos, rango fechas)</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">GET /api/candidatos/:id/financiamiento — SERVEL 2024 (resumen, donantes, gastos, alertas_donante)</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">GET /api/candidatos/:id/licitaciones — licitaciones adjudicadas a empresas del candidato (resumen + listado paginado)</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">GET /api/stats — estadisticas globales (candidatos, scores, alertas, empresas, OCs, lobby, cargos)</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">GET /api/alertados — top 300 candidatos con alertas IA, ordenados por gravedad y score. Respuesta: {total, data[]}.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Rate limiting: express-rate-limit — 300 req/15min general, 80 req/15min en /api/candidatos.</div></div>
+  </div>
+</div>
+
+<div class="capa" style="border-color:#BA7517">
+  <div class="capa-header">
+    <span class="capa-title">Capa 4 — Interfaces ciudadanas</span>
+    <span class="pct" style="color:#BA7517">78%</span>
+  </div>
+  <div class="bar-wrap"><div class="bar-fill" style="width:78%;background:#BA7517"></div></div>
+  <div class="items">
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Frontend HTML conectado a API real (sin mock). URL dinamica: localhost en dev, Railway en prod.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Tabs Empresas, Lobby y Alertas IA con datos reales</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Badge score_transparencia en cards y perfil (verde/amarillo/rojo con barra)</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Tab Declaraciones — historial CPLT con tipo, institucion, cargo, regimen, link original.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Tab Congreso — asistencia por legislatura (%) + ultimas 100 votaciones. Carga lazy.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Tab Mercado — OCs paginadas con resumen (total, monto, organismos). Carga lazy.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Tab Campana — financiamiento SERVEL 2024 (ingresos, gastos, donantes, alertas DONANTE_PROVEEDOR). Carga lazy.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Tab Licitaciones — licitaciones adjudicadas a empresas del candidato. Resumen + cards con link a Mercado Publico. Carga lazy.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Vista Estadisticas — /api/stats con contadores, distribucion scores, alertas por tipo, top cargos.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Filtro cargo (server-side) + filtro score tier verde/amarillo/rojo persistente (client-side, bug displayedCandidates corregido).</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Vista Alertas IA — top 300 candidatos con alertas, filtro por texto+gravedad+tipo, cards clickables desde Estadisticas.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Vista Guia Ciudadana — explicaciones en lenguaje simple de todas las secciones del perfil.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">UX: banner bienvenida dismissible (localStorage), tooltip en badge score, contador candidatos visibles, tabs Congreso/Proyectos solo para diputados.</div></div>
+    <div class="item" style="background:var(--color-background-warning)"><div class="dot" style="background:#BA7517"></div><div class="item-text">Deploy Railway + Vercel — railway.toml y vercel.json creados. Pendiente: migrar DB y publicar.</div></div>
+    <div class="item" style="background:var(--color-background-danger)"><div class="dot" style="background:#A32D2D"></div><div class="item-text">Chatbot IA en lenguaje natural (Claude API + texto-a-SQL)</div></div>
+    <div class="item" style="background:var(--color-background-danger)"><div class="dot" style="background:#A32D2D"></div><div class="item-text">App movil React Native (sin empezar)</div></div>
+    <div class="item" style="background:var(--color-background-danger)"><div class="dot" style="background:#A32D2D"></div><div class="item-text">Alertas push / email (sin empezar)</div></div>
+  </div>
+</div>
+
+<div class="capa" style="border-color:#5B4FBE">
+  <div class="capa-header">
+    <span class="capa-title">Fuentes futuras — ordenadas por impacto</span>
+    <span class="pct" style="color:#5B4FBE">0%</span>
+  </div>
+  <div class="bar-wrap"><div class="bar-fill" style="width:0%;background:#5B4FBE"></div></div>
+  <div class="items">
+    <div class="item" style="background:var(--color-background-secondary)"><div class="dot" style="background:#999"></div><div class="item-text">Contraloria General — DESCARTADO (sesion 9). Sin API ni bulk download de sumarios/sanciones por nombre. robots.txt Disallow:/.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">BCN — 7.933 proyectos, 251 diputados. Tab Proyectos en frontend. GET /api/candidatos/:id/proyectos.</div></div>
+    <div class="item" style="background:var(--color-background-danger)"><div class="dot" style="background:#A32D2D"></div><div class="item-text">DIPRES / SIAPER — sueldo exacto de funcionarios. Datos fragmentados por institucion (~350 orgs), sin bulk. Impacto medio, dificultad media.</div></div>
+    <div class="item" style="background:var(--color-background-danger)"><div class="dot" style="background:#A32D2D"></div><div class="item-text">Poder Judicial — causas penales publicas. Sin API, scraping complejo. Impacto alto, muy dificil.</div></div>
+    <div class="item" style="background:var(--color-background-danger)"><div class="dot" style="background:#A32D2D"></div><div class="item-text">Portal Transparencia Ley 20.285 — gastos por institucion. ~350 URLs distintas. Impacto bajo-medio, muy dificil.</div></div>
+  </div>
+</div>
+
+<div class="capa" style="border-color:#1A3C5E">
+  <div class="capa-header">
+    <span class="capa-title">Infraestructura y herramientas de desarrollo</span>
+    <span class="pct" style="color:#1A3C5E">100%</span>
+  </div>
+  <div class="bar-wrap"><div class="bar-fill" style="width:100%;background:#1A3C5E"></div></div>
+  <div class="items">
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Obsidian vault — CIAP como boveda Obsidian (.obsidian/). Graph View activo con colores por carpeta. node_modules y .claude excluidos.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">MCP gemini-search — busquedas web con Gemini API (gemini-search-mcp Python). Configurado en .mcp.json.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">MCP obsidian — acceso al vault CIAP desde Claude Code (obsidian-mcp instalado globalmente).</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Hook logging automatico — UserPromptSubmit + PostToolUse + Stop. Diario: prompt.md, cambios.md, resumen_sesion.md generado automaticamente al cerrar Claude.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">vault_tagger.py — detecta tipo de cada nota y agrega YAML frontmatter con tags para Graph View de Obsidian.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Knowledge graph completo — 17 notas nuevas: arquitectura/ (Stack, Flujo, Modelo), scripts/ (Pipeline, Extractores, Herramientas), src/API_Node, db/ (6 tablas), fuentes/ (5 fuentes). Lineaje visual fuente->DB->API->frontend.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">CLAUDE.md R2 reforzada — tabla explicita de que nota crear segun cada accion (bug, endpoint, schema, script, hallazgo). R1 actualizada a gemini-search.</div></div>
+    <div class="item" style="background:var(--color-background-success)"><div class="dot" style="background:#1A6B3C"></div><div class="item-text">Mapa_Proyecto.md — hub maximo del grafo con lineaje completo y links a todos los hubs.</div></div>
+  </div>
+</div>
+
+<div class="next-section">
+  <div class="next-title">Proximos pasos — de mas facil a mas dificil</div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">1.</span><span>[COMPLETADO] Gobierno Kast — 118.760 declaraciones en DB. +116 candidatos nuevos (6.801 total). Scores recalculados (promedio 46.5). Bug importar_declaraciones.py corregido (early-exit removido).</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">2.</span><span>[COMPLETADO] RUTs: +133 rescatados (5.601 total). 884 sin RUT visible en CPLT — privacidad, no resoluble.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">3.</span><span>[COMPLETADO] Participaciones: +109 filas nuevas (6.903 total). Scripts corregidos para usar cloudscraper y JOIN directo con declaracion_cplt.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">4.</span><span>[EN CURSO] Licitaciones Mercado Publico — 28 meses completados (hasta 2022-04). Continuar: <code>.venv\Scripts\python.exe scripts\pipeline\ingesta_licitaciones.py</code>. Endpoint y tab frontend listos. Cuando termine: correr ia,scores para alerta LICITACION_PROVEEDOR.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">5.</span><span>[COMPLETADO] Rate limiting — express-rate-limit: 300 req/15min general, 80 req/15min en /api/candidatos.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">6.</span><span>[COMPLETADO] Frontend UX sesion 13 — filtro score persistente, Alertas IA, Guia Ciudadana, banner, tooltips, tabs condicionales, contador, alertas clickables.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">7.</span><span>[EN CURSO] Licitaciones Mercado Publico — 28 meses completados (hasta 2022-04). Continuar: <code>.venv\Scripts\python.exe scripts\pipeline\ingesta_licitaciones.py</code>. Cuando termine: correr ia,scores.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">8.</span><span>Alerta LICITACION_PROVEEDOR — detectar empresa de candidato que gana licitacion en organismo donde trabaja. Agregar detector en ia_fiscalizadora.py tras terminar ingesta.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">9.</span><span>Deploy publico — railway.toml y vercel.json listos. Falta: crear proyecto Railway, plugin PostgreSQL, variables de entorno, migrar DB con pg_dump, actualizar URL en HTML y publicar en Vercel.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">10.</span><span>Chatbot IA — Claude API con texto-a-SQL sobre PostgreSQL. Schema en prompt del sistema. Costo estimado: ~$0.005/pregunta con prompt caching. Integrar al frontend.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">11.</span><span>DIPRES / SIAPER — sueldo exacto de funcionarios. ~350 organismos, sin bulk download. Dificultad alta.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">12.</span><span>Alertas push / email — infraestructura de notificaciones ciudadanas. Sin empezar.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">13.</span><span>Portal Transparencia Ley 20.285 — gastos por institucion. ~350 URLs distintas. Muy dificil.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">14.</span><span>Poder Judicial — causas penales publicas. Sin API, scraping complejo. Muy dificil.</span></div>
+  <div class="next-item"><span style="color:#1A3C5E;font-weight:500">15.</span><span>App movil React Native — proyecto nuevo completo. Sin empezar.</span></div>
+</div>
+
+<div class="update-note">
+  REGLA: Actualizar este archivo Y contexto/CONTEXTO.md cada vez que se complete una tarea, sprint o cambio relevante. Estos dos archivos son la fuente de verdad del proyecto.
+</div>
+
+</div>

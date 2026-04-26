@@ -1,0 +1,1523 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); background: var(--color-background-tertiary); }
+
+.app { max-width: 900px; margin: 0 auto; padding: 1rem; }
+
+.header { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 36px; height: 36px; border-radius: var(--border-radius-md); background: #1A3C5E; display: flex; align-items: center; justify-content: center; }
+.logo-icon svg { width: 20px; height: 20px; fill: #C8960C; }
+.logo-text { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+.logo-sub { font-size: 12px; color: var(--color-text-secondary); }
+.search-bar { display: flex; align-items: center; gap: 8px; flex: 1; max-width: 340px; }
+.search-bar input { flex: 1; padding: 8px 12px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 13px; background: var(--color-background-secondary); color: var(--color-text-primary); }
+
+.nav { display: flex; gap: 6px; margin-bottom: 1rem; flex-wrap: wrap; }
+.nav-btn { padding: 7px 14px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 13px; cursor: pointer; background: var(--color-background-primary); color: var(--color-text-secondary); transition: all 0.15s; }
+.nav-btn.active { background: #1A3C5E; color: #fff; border-color: #1A3C5E; }
+.nav-btn:hover:not(.active) { background: var(--color-background-secondary); }
+
+.grid2 { display: grid; grid-template-columns: 280px 1fr; gap: 1rem; align-items: start; }
+@media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
+
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; }
+
+.candidate-list { display: flex; flex-direction: column; gap: 8px; }
+.cand-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); cursor: pointer; background: var(--color-background-secondary); transition: all 0.15s; }
+.cand-item.selected, .cand-item:hover { border-color: #1A3C5E; background: var(--color-background-primary); }
+.cand-item.selected { border-left: 3px solid #C8960C; }
+.avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.cand-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.cand-party { font-size: 11px; color: var(--color-text-secondary); }
+.ideo-badge { font-size: 10px; padding: 2px 7px; border-radius: 99px; font-weight: 500; margin-top: 2px; display: inline-block; }
+
+.profile-header { display: flex; align-items: center; gap: 16px; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.avatar-lg { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 500; flex-shrink: 0; }
+.profile-name { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+.profile-party { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; }
+.profile-meta { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+
+.tabs { display: flex; gap: 4px; margin-bottom: 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); padding-bottom: 0; }
+.tab { padding: 8px 14px; font-size: 13px; cursor: pointer; color: var(--color-text-secondary); border-bottom: 2px solid transparent; margin-bottom: -0.5px; }
+.tab.active { color: #1A3C5E; border-bottom-color: #1A3C5E; font-weight: 500; }
+
+.score-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 1rem; }
+.score-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; text-align: center; }
+.score-num { font-size: 22px; font-weight: 500; }
+.score-label { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+
+.bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.bar-label { font-size: 12px; color: var(--color-text-secondary); width: 140px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 8px; background: var(--color-background-secondary); border-radius: 99px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
+.bar-pct { font-size: 12px; color: var(--color-text-secondary); width: 32px; text-align: right; }
+
+.section-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 10px; }
+
+.tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 3px 8px; border-radius: 99px; margin: 2px; }
+
+.scandal-item { padding: 10px 12px; border-left: 3px solid; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; margin-bottom: 8px; background: var(--color-background-secondary); }
+.scandal-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.scandal-desc { font-size: 12px; color: var(--color-text-secondary); margin-top: 3px; }
+.scandal-date { font-size: 11px; color: var(--color-text-tertiary); margin-top: 4px; }
+
+.patrimonio-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 13px; }
+.patrimonio-row:last-child { border-bottom: none; }
+
+.empresa-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); margin-bottom: 6px; }
+.empresa-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.vote-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 12px; }
+.vote-badge { padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 500; }
+
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.compare-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px; }
+.compare-name { font-size: 13px; font-weight: 500; margin-bottom: 8px; color: var(--color-text-primary); }
+
+.info-pill { font-size: 11px; background: var(--color-background-info); color: var(--color-text-info); padding: 3px 8px; border-radius: 99px; display: inline-block; }
+</style>
+
+<div id="welcomeBanner" style="display:none;position:fixed;inset:0;z-index:999;background:#0006;align-items:center;justify-content:center;padding:1rem">
+  <div style="background:var(--color-background-primary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);max-width:480px;width:100%;padding:1.75rem;box-shadow:0 8px 32px #0003">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem">
+      <div style="width:42px;height:42px;border-radius:var(--border-radius-md);background:#1A3C5E;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="#C8960C"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div>
+        <div style="font-size:16px;font-weight:600;color:var(--color-text-primary)">Bienvenido a Ciudadano Informado</div>
+        <div style="font-size:12px;color:var(--color-text-secondary);margin-top:2px">Partido del Dato — ECT Chile</div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-bottom:1.25rem">
+      Esta plataforma cruza automaticamente fuentes oficiales del Estado — declaraciones de patrimonio, lobby, licitaciones y financiamiento de campana — para que <strong style="color:var(--color-text-primary)">cualquier ciudadano pueda fiscalizar a sus representantes</strong>.<br><br>
+      Los datos vienen de <strong style="color:var(--color-text-primary)">CPLT, Ley de Lobby, SERVEL, Mercado Publico y el Congreso</strong>. Nada esta inventado.
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="dismissWelcome()" style="flex:1;padding:9px 16px;font-size:13px;background:#1A3C5E;color:#fff;border:none;border-radius:var(--border-radius-md);cursor:pointer;font-weight:500">Explorar la plataforma</button>
+      <button onclick="dismissAndGoGuia()" style="flex:1;padding:9px 16px;font-size:13px;background:var(--color-background-secondary);color:var(--color-text-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);cursor:pointer">Ver Guia del Ciudadano</button>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--color-text-tertiary);text-align:center">No volveremos a mostrar esto — puedes volver a la Guia desde el menu.</div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div>
+        <div class="logo-text">Ciudadano Informado</div>
+        <div class="logo-sub">Partido del Dato — ECT</div>
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Buscar candidato, partido, ley..." id="searchInput" oninput="debouncedSearch(this.value)">
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn active" onclick="setView('candidatos',this)">Candidatos</button>
+    <button class="nav-btn" onclick="setView('partidos',this)">Partidos</button>
+    <button class="nav-btn" onclick="setView('historial',this)">Historial Legislativo</button>
+    <button class="nav-btn" onclick="setView('comparar',this)">Comparar</button>
+    <button class="nav-btn" onclick="setView('fisco',this)">Fisco &amp; Presupuesto</button>
+    <button class="nav-btn" onclick="setView('alertados',this)" style="border-color:#A32D2D;color:#A32D2D">Alertas IA</button>
+    <button class="nav-btn" onclick="setView('guia',this)">Guia Ciudadana</button>
+    <button class="nav-btn" onclick="setView('stats',this)">Estadisticas</button>
+  </div>
+
+  <div id="view-stats" style="display:none">
+    <div class="card" id="statsContent">
+      <div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando estadísticas...</div>
+    </div>
+  </div>
+
+  <div id="view-candidatos">
+    <div class="grid2">
+      <div class="card">
+        <div class="section-title" style="margin-bottom:8px">Candidatos 2025</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px">
+          <select id="cargoFilter" onchange="applyFilters()" style="padding:6px 10px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary)">
+            <option value="">Todos los cargos</option>
+          </select>
+          <select id="scoreFilter" onchange="applyScoreFilter()" style="padding:6px 10px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary)">
+            <option value="">Todos los scores</option>
+            <option value="verde">Verde — Transparente (≥75)</option>
+            <option value="amarillo">Amarillo — Moderado (50–74)</option>
+            <option value="rojo">Rojo — Bajo (&lt;50)</option>
+          </select>
+          <div id="filterCount" style="font-size:11px;color:var(--color-text-secondary);min-height:14px;padding:0 2px"></div>
+        </div>
+        <div class="candidate-list" id="candList"></div>
+      </div>
+      <div class="card" id="profilePanel">
+        <div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">
+          Selecciona un candidato para ver su perfil completo
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-partidos" style="display:none">
+    <div class="card">
+      <div class="section-title" style="margin-bottom:1rem">Partidos Políticos — Espectro Ideológico</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px" id="partidoGrid"></div>
+    </div>
+  </div>
+
+  <div id="view-historial" style="display:none">
+    <div class="card">
+      <div class="section-title" style="margin-bottom:1rem">Historial de Votaciones en el Congreso</div>
+      <div id="historialContent"></div>
+    </div>
+  </div>
+
+  <div id="view-comparar" style="display:none">
+    <div class="card">
+      <div class="section-title" style="margin-bottom:1rem">Comparar dos candidatos</div>
+      <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+        <select id="cmp1" style="padding:7px 10px;font-size:13px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary)"></select>
+        <span style="align-self:center;color:var(--color-text-secondary)">vs</span>
+        <select id="cmp2" style="padding:7px 10px;font-size:13px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary)"></select>
+        <button onclick="renderCompare()" style="padding:7px 14px;font-size:13px;background:#1A3C5E;color:#fff;border:none;border-radius:var(--border-radius-md);cursor:pointer">Comparar</button>
+      </div>
+      <div id="compareResult"></div>
+    </div>
+  </div>
+
+  <div id="view-fisco" style="display:none">
+    <div class="card">
+      <div class="section-title" style="margin-bottom:1rem">Presupuesto Nacional 2025 — Resumen Ciudadano</div>
+      <div id="fiscoContent"></div>
+    </div>
+  </div>
+
+  <div id="view-alertados" style="display:none">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+        <div style="font-size:15px;font-weight:500;color:var(--color-text-primary)">Funcionarios con Alertas de Probidad</div>
+        <span style="font-size:11px;padding:3px 9px;border-radius:99px;background:#FAEDEC;color:#A32D2D;font-weight:500">IA Fiscalizadora</span>
+      </div>
+      <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem">Nuestra IA cruzó declaraciones de patrimonio, registros de lobby, licitaciones y financiamiento electoral para detectar posibles conflictos de interés. Haz clic en cualquier candidato para ver su perfil completo.</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+        <input type="text" id="alertadosSearch" placeholder="Buscar por nombre o cargo..." oninput="filtrarAlertados()" style="flex:1;min-width:160px;padding:6px 10px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary)">
+        <select id="alertadosGravedad" onchange="filtrarAlertados()" style="padding:6px 10px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary)">
+          <option value="">Todas las gravedades</option>
+          <option value="ALTA">Alta</option>
+          <option value="MEDIA">Media</option>
+          <option value="BAJA">Baja</option>
+        </select>
+        <select id="alertadosTipo" onchange="filtrarAlertados()" style="padding:6px 10px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary)">
+          <option value="">Todos los tipos</option>
+          <option value="AUTOLOBBY_DETECTADO">Autolobby</option>
+          <option value="DIRECTOR_NO_DECLARADO">Director no declarado</option>
+          <option value="CONFLICTO_FAMILIAR_POSIBLE">Conflicto familiar</option>
+          <option value="DONANTE_PROVEEDOR">Donante proveedor</option>
+        </select>
+      </div>
+      <div id="alertadosFilterCount" style="font-size:11px;color:var(--color-text-secondary);margin-bottom:8px;min-height:14px"></div>
+      <div id="alertadosContent">
+        <div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando alertas...</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-guia" style="display:none">
+    <div class="card">
+      <div style="font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Guia del Ciudadano</div>
+      <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:1.25rem">Todo lo que ves en esta plataforma viene de fuentes oficiales del Estado de Chile. Esta guia explica cada tipo de dato en lenguaje simple.</div>
+      <div id="guiaContent"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// URL de la API: localhost en desarrollo, Railway en producción
+const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3000'
+  : (window.CIAP_API_URL || 'https://api-ciudadana.up.railway.app');
+
+const partidos = [
+  {nombre:"Partido Socialista",ideo:"Izquierda",color:"#E24B4A",miembros:84,fundado:1933,desc:"Partido histórico de la centroizquierda chilena, fundado en 1933."},
+  {nombre:"Frente Amplio",ideo:"Izquierda",color:"#639922",miembros:32,fundado:2017,desc:"Coalición de movimientos sociales y partidos de izquierda emergentes."},
+  {nombre:"UDI",ideo:"Derecha",color:"#185FA5",miembros:72,fundado:1983,desc:"Unión Demócrata Independiente, partido gremialista de derecha."},
+  {nombre:"RN",ideo:"Centro-Derecha",color:"#BA7517",miembros:60,fundado:1987,desc:"Renovación Nacional, centroderecha liberal-conservadora."},
+  {nombre:"Democracia Cristiana",ideo:"Centro",color:"#534AB7",miembros:45,fundado:1938,desc:"Partido humanista cristiano de centroizquierda histórico."},
+  {nombre:"PPD",ideo:"Centro-Izquierda",color:"#0F6E56",miembros:38,fundado:1987,desc:"Partido Por la Democracia, centroizquierda laica y progresista."},
+];
+
+let selectedId = null;
+let currentTab = 'resumen';
+let currentView = 'candidatos';
+let allCandidates = [];
+let displayedCandidates = [];
+let currentCandidate = null;
+let profileCache = {};
+
+// ── Banner de bienvenida ──────────────────────────────────────────────
+function initWelcomeBanner() {
+  if (localStorage.getItem('ciap_welcome_seen')) return;
+  const b = document.getElementById('welcomeBanner');
+  if (b) { b.style.display = 'flex'; b.style.alignItems = 'center'; b.style.justifyContent = 'center'; }
+}
+function dismissWelcome() {
+  localStorage.setItem('ciap_welcome_seen', '1');
+  const b = document.getElementById('welcomeBanner');
+  if (b) b.style.display = 'none';
+}
+function dismissAndGoGuia() {
+  dismissWelcome();
+  const btn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.textContent.trim() === 'Guia Ciudadana');
+  if (btn) setView('guia', btn);
+}
+
+// Debounce: espera 350ms tras el último keystroke antes de buscar
+let _debounceTimer = null;
+function debouncedSearch(q) {
+  clearTimeout(_debounceTimer);
+  _debounceTimer = setTimeout(() => filterCandidates(q), 350);
+}
+
+// Paleta de colores por partido
+const PARTIDO_COLORS = {
+  'Partido Socialista':         {color:'#C0392B', bg:'#FAEDEC'},
+  'Frente Amplio':              {color:'#3B6D11', bg:'#EAF3DE'},
+  'Partido Comunista':          {color:'#8B0000', bg:'#F9E8E8'},
+  'Unión Demócrata Independiente': {color:'#185FA5', bg:'#E6EEF9'},
+  'UDI':                        {color:'#185FA5', bg:'#E6EEF9'},
+  'Renovación Nacional':        {color:'#BA7517', bg:'#FDF3E3'},
+  'RN':                         {color:'#BA7517', bg:'#FDF3E3'},
+  'Democracia Cristiana':       {color:'#534AB7', bg:'#EEEDFE'},
+  'PPD':                        {color:'#0F6E56', bg:'#E6F6F2'},
+  'Partido Radical':            {color:'#E67E22', bg:'#FEF0E7'},
+  'Republicano':                {color:'#2C3E50', bg:'#ECF0F1'},
+};
+const DEFAULT_COLORS = [{color:'#1A3C5E',bg:'#EAF0F6'},{color:'#0F6E56',bg:'#E6F6F2'},{color:'#534AB7',bg:'#EEEDFE'},{color:'#BA7517',bg:'#FDF3E3'}];
+
+function candidateStyle(c) {
+  // partido_id es NULL para todos los candidatos reales; asignar color por cargo
+  const cargo = (c.cargo || '').toUpperCase();
+  if (cargo.includes('SENADOR'))   return {color:'#1A3C5E', bg:'#EAF0F6'};
+  if (cargo.includes('DIPUTADO'))  return {color:'#0F6E56', bg:'#E6F6F2'};
+  if (cargo.includes('ALCALDE'))   return {color:'#BA7517', bg:'#FDF3E3'};
+  if (cargo.includes('MINISTRO'))  return {color:'#534AB7', bg:'#EEEDFE'};
+  if (cargo.includes('PRESIDENTE'))return {color:'#8B0000', bg:'#F9E8E8'};
+  const h = [...(c.id+'')].reduce((a,x)=>a+x.charCodeAt(0),0);
+  return DEFAULT_COLORS[h % DEFAULT_COLORS.length];
+}
+
+// nombres contiene el nombre completo (apellidos siempre vacío en la DB)
+function displayName(c) {
+  return c.nombre_limpio || c.nombres || '—';
+}
+
+function getInitials(c) {
+  const parts = (c.nombre_limpio || c.nombres || '').trim().split(/\s+/);
+  return ((parts[0] || '')[0] || '') + ((parts[1] || '')[0] || '');
+}
+
+function setView(v, btn) {
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.remove('active');
+    // restaurar color original del boton alertados
+    if (b.textContent.trim() === 'Alertas IA') {
+      b.style.borderColor = b.classList.contains('active') ? '' : '#A32D2D';
+      b.style.color = b.classList.contains('active') ? '' : '#A32D2D';
+    }
+  });
+  btn.classList.add('active');
+  if (btn.textContent.trim() === 'Alertas IA') {
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  }
+  ['candidatos','partidos','historial','comparar','fisco','alertados','guia','stats'].forEach(id => {
+    document.getElementById('view-'+id).style.display = id===v ? '' : 'none';
+  });
+  currentView = v;
+  if(v==='partidos')   renderPartidos();
+  if(v==='historial')  renderHistorial();
+  if(v==='comparar')   renderCompareSelects();
+  if(v==='fisco')      renderFisco();
+  if(v==='alertados')  renderAlertados();
+  if(v==='guia')       renderGuia();
+  if(v==='stats')      renderStats();
+}
+
+async function filterCandidates(q) {
+  const cargo = (document.getElementById('cargoFilter')?.value || '').trim();
+  const el = document.getElementById('candList');
+  el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Buscando...</div>';
+  try {
+    let url = `${API}/api/candidatos?q=${encodeURIComponent(q)}&limit=50`;
+    if (cargo) url += `&cargo=${encodeURIComponent(cargo)}`;
+    const res = await fetch(url);
+    const json = await res.json();
+    allCandidates = json.data || [];
+    applyScoreFilter(); // sets displayedCandidates and renders
+  } catch(e) {
+    el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Error al conectar con la API</div>';
+  }
+}
+
+function applyFilters() {
+  const q = document.getElementById('searchInput')?.value || '';
+  filterCandidates(q);
+}
+
+function applyScoreFilter() {
+  const tier = document.getElementById('scoreFilter')?.value || '';
+  const countEl = document.getElementById('filterCount');
+  if (!tier) {
+    displayedCandidates = allCandidates;
+    if (countEl) countEl.textContent = `${allCandidates.length} candidatos`;
+    renderCandList();
+    return;
+  }
+  displayedCandidates = allCandidates.filter(c => {
+    const s = c.score_transparencia;
+    if (tier === 'verde')    return s != null && s >= 75;
+    if (tier === 'amarillo') return s != null && s >= 50 && s < 75;
+    if (tier === 'rojo')     return s != null && s < 50;
+    return true;
+  });
+  const labels = { verde: 'Verde (≥75)', amarillo: 'Amarillo (50-74)', rojo: 'Rojo (<50)' };
+  if (countEl) countEl.textContent = `Mostrando ${displayedCandidates.length} de ${allCandidates.length} — filtro: ${labels[tier]}`;
+  renderCandList();
+}
+
+function renderCandList() {
+  const el = document.getElementById('candList');
+  if (!displayedCandidates.length) {
+    el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Sin resultados</div>';
+    return;
+  }
+  el.innerHTML = displayedCandidates.map(c => {
+    const {color, bg} = candidateStyle(c);
+    const initials = getInitials(c);
+    return `
+      <div class="cand-item ${selectedId===c.id?'selected':''}" onclick="selectCandidate(${c.id})">
+        <div class="avatar" style="background:${bg};color:${color}">${initials}</div>
+        <div style="flex:1;min-width:0">
+          <div class="cand-name">${displayName(c)}</div>
+          <div class="cand-party">${c.cargo || ''}</div>
+          <div style="margin-top:3px">${scoreBadge(c.score_transparencia, 'sm')}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function selectCandidate(id) {
+  selectedId = id;
+  currentTab = 'resumen';
+  renderCandList();
+
+  // Si el perfil ya está en cache, renderizar directamente sin fetch
+  if (profileCache[id]) {
+    currentCandidate = profileCache[id];
+    renderProfile();
+    return;
+  }
+
+  const panel = document.getElementById('profilePanel');
+  panel.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando perfil...</div>';
+  try {
+    const res = await fetch(`${API}/api/candidatos/${id}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    currentCandidate = await res.json();
+    profileCache[id] = currentCandidate;
+    renderProfile();
+  } catch(e) {
+    panel.innerHTML = `<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Error al cargar perfil: ${e.message}</div>`;
+  }
+}
+
+function renderProfile() {
+  const c = currentCandidate;
+  if (!c) return;
+  const {color, bg} = candidateStyle(c);
+  const initials = getInitials(c);
+  const alertasCount = (c.alertas || []).length;
+  const empresasCount = (c.empresas || []).length;
+  const esDiputado = (c.cargo || '').toUpperCase().includes('DIPUTADO');
+  // Si el tab activo es congreso/proyectos pero el candidato no es diputado, resetear a resumen
+  if ((currentTab === 'congreso' || currentTab === 'proyectos') && !esDiputado) currentTab = 'resumen';
+
+  const panel = document.getElementById('profilePanel');
+  panel.innerHTML = `
+    <div class="profile-header">
+      <div class="avatar-lg" style="background:${bg};color:${color}">${initials}</div>
+      <div>
+        <div class="profile-name">${displayName(c)}</div>
+        <div class="profile-party">${c.cargo || 'Cargo no especificado'}${c.comuna ? ' · ' + c.comuna : ''}</div>
+        <div class="profile-meta">
+          ${c.cargo ? `<span class="info-pill">${c.cargo}</span>` : ''}
+          ${scoreBadge(c.score_transparencia, 'lg')}
+          ${alertasCount ? `<span style="font-size:11px;padding:3px 8px;border-radius:99px;background:#FAEDEC;color:#A32D2D;font-weight:500">${alertasCount} alerta(s) IA</span>` : '<span style="font-size:11px;padding:3px 8px;border-radius:99px;background:var(--color-background-success);color:var(--color-text-success)">Sin alertas</span>'}
+        </div>
+      </div>
+    </div>
+    <div class="tabs">
+      <div class="tab ${currentTab==='resumen'?'active':''}" onclick="setTab('resumen')">Resumen</div>
+      <div class="tab ${currentTab==='empresas'?'active':''}" onclick="setTab('empresas')">Empresas${empresasCount ? ' ('+empresasCount+')' : ''}</div>
+      <div class="tab ${currentTab==='lobby'?'active':''}" onclick="setTab('lobby')">Lobby</div>
+      <div class="tab ${currentTab==='alertas'?'active':''}" onclick="setTab('alertas')">Alertas${alertasCount ? ' ('+alertasCount+')' : ''}</div>
+      <div class="tab ${currentTab==='declaraciones'?'active':''}" onclick="setTab('declaraciones')">Declaraciones</div>
+      ${esDiputado ? `<div class="tab ${currentTab==='congreso'?'active':''}" onclick="setTab('congreso')">Congreso</div>` : ''}
+      <div class="tab ${currentTab==='mercado'?'active':''}" onclick="setTab('mercado')">Mercado</div>
+      <div class="tab ${currentTab==='licitaciones'?'active':''}" onclick="setTab('licitaciones')">Licitaciones</div>
+      <div class="tab ${currentTab==='campana'?'active':''}" onclick="setTab('campana')">Campaña</div>
+      ${esDiputado ? `<div class="tab ${currentTab==='proyectos'?'active':''}" onclick="setTab('proyectos')">Proyectos</div>` : ''}
+    </div>
+    <div id="tabContent"></div>
+  `;
+  renderTab(c);
+}
+
+async function setTab(t) {
+  currentTab = t;
+  document.querySelectorAll('#profilePanel .tab').forEach(el => {
+    el.classList.toggle('active', el.textContent.toLowerCase().startsWith(t));
+  });
+
+  // Carga lazy de declaraciones
+  if (t === 'declaraciones' && currentCandidate && currentCandidate.declaraciones === undefined) {
+    const el = document.getElementById('tabContent');
+    if (el) el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando declaraciones...</div>';
+    try {
+      const res = await fetch(`${API}/api/candidatos/${currentCandidate.id}/patrimonio`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      currentCandidate.declaraciones = data.declaraciones || [];
+    } catch(e) {
+      currentCandidate.declaraciones = null;
+    }
+  }
+
+  // Carga lazy de datos del Congreso
+  if (t === 'congreso' && currentCandidate && currentCandidate.congreso === undefined) {
+    const el = document.getElementById('tabContent');
+    if (el) el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando datos del Congreso...</div>';
+    try {
+      const res = await fetch(`${API}/api/candidatos/${currentCandidate.id}/congreso`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      currentCandidate.congreso = await res.json();
+    } catch(e) {
+      currentCandidate.congreso = null;
+    }
+  }
+
+  // Carga lazy de financiamiento electoral SERVEL
+  if (t === 'campana' && currentCandidate && currentCandidate.financiamiento === undefined) {
+    const el = document.getElementById('tabContent');
+    if (el) el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando financiamiento electoral...</div>';
+    try {
+      const res = await fetch(`${API}/api/candidatos/${currentCandidate.id}/financiamiento`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      currentCandidate.financiamiento = await res.json();
+    } catch(e) {
+      currentCandidate.financiamiento = null;
+    }
+  }
+
+  // Carga lazy de licitaciones adjudicadas
+  if (t === 'licitaciones' && currentCandidate && currentCandidate.licitaciones === undefined) {
+    const el = document.getElementById('tabContent');
+    if (el) el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando licitaciones...</div>';
+    try {
+      const res = await fetch(`${API}/api/candidatos/${currentCandidate.id}/licitaciones?limit=50`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      currentCandidate.licitaciones = await res.json();
+    } catch(e) {
+      currentCandidate.licitaciones = null;
+    }
+  }
+
+  // Carga lazy de proyectos de ley BCN
+  if (t === 'proyectos' && currentCandidate && currentCandidate.proyectos === undefined) {
+    const el = document.getElementById('tabContent');
+    if (el) el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando proyectos de ley...</div>';
+    try {
+      const res = await fetch(`${API}/api/candidatos/${currentCandidate.id}/proyectos?limit=100`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      currentCandidate.proyectos = await res.json();
+    } catch(e) {
+      currentCandidate.proyectos = null;
+    }
+  }
+
+  // Carga lazy de órdenes de compra (Mercado Público)
+  if (t === 'mercado' && currentCandidate && currentCandidate.ordenes === undefined) {
+    const el = document.getElementById('tabContent');
+    if (el) el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando órdenes de compra...</div>';
+    try {
+      const res = await fetch(`${API}/api/candidatos/${currentCandidate.id}/ordenes?limit=50`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      currentCandidate.ordenes = await res.json();
+    } catch(e) {
+      currentCandidate.ordenes = null;
+    }
+  }
+
+  renderTab(currentCandidate);
+}
+
+function renderTab(c) {
+  const el = document.getElementById('tabContent');
+  if (!c || !el) return;
+
+  if (currentTab === 'resumen') {
+    const empresas = c.empresas || [];
+    const alertas = c.alertas || [];
+    el.innerHTML = `
+      <div class="score-row">
+        <div class="score-card">
+          <div class="score-num">${empresas.length}</div>
+          <div class="score-label">Empresas declaradas</div>
+        </div>
+        <div class="score-card">
+          <div class="score-num" style="color:${alertas.length?'#A32D2D':'#1A6B3C'}">${alertas.length}</div>
+          <div class="score-label">Alertas IA</div>
+        </div>
+        <div class="score-card" style="background:${scoreBg(c.score_transparencia)}">
+          <div class="score-num" style="color:${scoreColor(c.score_transparencia)}">${c.score_transparencia ?? '—'}</div>
+          <div class="score-label" style="color:${scoreColor(c.score_transparencia)}">${scoreLabel(c.score_transparencia)}</div>
+        </div>
+      </div>
+      ${c.score_transparencia != null ? `
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <span style="font-size:12px;color:var(--color-text-secondary)">Score de transparencia</span>
+          <span style="font-size:12px;font-weight:500;color:${scoreColor(c.score_transparencia)}">${c.score_transparencia}/100</span>
+        </div>
+        <div class="bar-track" style="height:10px">
+          <div class="bar-fill" style="width:${c.score_transparencia}%;background:${scoreColor(c.score_transparencia)}"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--color-text-tertiary)">
+          <span>0 — Opaco</span><span>50</span><span>100 — Transparente</span>
+        </div>
+      </div>` : ''}
+      <div style="font-size:13px;color:var(--color-text-secondary);line-height:2">
+        <div><strong style="color:var(--color-text-primary)">RUT:</strong> ${c.rut || '—'}</div>
+        <div><strong style="color:var(--color-text-primary)">Cargo:</strong> ${c.cargo || 'No especificado'}</div>
+        <div><strong style="color:var(--color-text-primary)">Comuna:</strong> ${c.comuna || 'No especificada'}</div>
+        ${c.fuente_url ? `<div><a href="${c.fuente_url}" target="_blank" style="color:#1A3C5E;font-size:12px;text-decoration:underline">Ver declaracion original</a></div>` : ''}
+      </div>
+    `;
+  } else if (currentTab === 'empresas') {
+    const empresas = c.empresas || [];
+    if (!empresas.length) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">No declara participación en empresas</div>';
+      return;
+    }
+    el.innerHTML = `
+      <div style="margin-bottom:8px;font-size:12px;color:var(--color-text-secondary)">Participación societaria declarada en InfoProbidad (CPLT)</div>
+      ${empresas.map((e, i) => `
+        <div class="empresa-item">
+          <div class="empresa-dot" style="background:${['#1A3C5E','#C8960C','#1A6B3C','#A32D2D'][i%4]}"></div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:500;color:var(--color-text-primary)">${e.empresa_nombre}</div>
+            <div style="font-size:11px;color:var(--color-text-secondary)">RUT: ${e.empresa_rut}${e.porcentaje_propiedad ? ' · ' + parseFloat(e.porcentaje_propiedad).toFixed(1) + '%' : ''}</div>
+          </div>
+        </div>`).join('')}
+    `;
+  } else if (currentTab === 'lobby') {
+    const lobby = c.lobby || [];
+    if (!lobby.length) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Sin reuniones de lobby registradas (Ley 20.730)</div>';
+      return;
+    }
+    el.innerHTML = `
+      <div style="margin-bottom:8px;font-size:12px;color:var(--color-text-secondary)">Últimas reuniones donde fue sujeto de lobby — Ley 20.730</div>
+      ${lobby.map(l => `
+        <div style="padding:10px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:8px">
+            <div style="font-size:13px;font-weight:500;color:var(--color-text-primary)">${l.empresa_lobbied || 'Entidad desconocida'}</div>
+            <div style="font-size:11px;color:var(--color-text-tertiary);flex-shrink:0">${l.fecha ? String(l.fecha).slice(0,10) : '—'}</div>
+          </div>
+          ${l.giro ? `<div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px">Giro: ${l.giro}</div>` : ''}
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px">Institución: ${l.institucion_lobby || '—'}</div>
+          ${l.url ? `<a href="${l.url}" target="_blank" style="font-size:11px;color:#1A3C5E;margin-top:4px;display:inline-block;text-decoration:underline">Ver acta oficial</a>` : ''}
+        </div>`).join('')}
+    `;
+  } else if (currentTab === 'alertas') {
+    const alertas = c.alertas || [];
+    if (!alertas.length) {
+      el.innerHTML = '<div style="font-size:13px;padding:12px;color:var(--color-text-success);background:var(--color-background-success);border-radius:var(--border-radius-md)">Sin alertas de probidad detectadas por la IA fiscalizadora</div>';
+      return;
+    }
+    el.innerHTML = alertas.map(a => {
+      const gravColor = a.gravedad === 'ALTA' ? '#A32D2D' : a.gravedad === 'MEDIA' ? '#BA7517' : '#888';
+      return `
+        <div class="scandal-item" style="border-color:${gravColor}">
+          <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap">
+            <span style="font-size:11px;padding:2px 8px;border-radius:99px;background:${gravColor}22;color:${gravColor};font-weight:500">${a.gravedad}</span>
+            <span style="font-size:11px;color:var(--color-text-secondary)">${a.tipo}</span>
+            ${a.match_tipo ? `<span class="info-pill">${a.match_tipo}</span>` : ''}
+          </div>
+          <div class="scandal-desc">${a.detalle}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+            <div class="scandal-date">${a.fecha_deteccion ? String(a.fecha_deteccion).slice(0,10) : ''}</div>
+            ${a.fuente_url ? `<a href="${a.fuente_url}" target="_blank" style="font-size:11px;color:#1A3C5E;text-decoration:underline">Ver fuente</a>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+
+  } else if (currentTab === 'congreso') {
+    const cg = c.congreso;
+    if (cg === undefined) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando datos del Congreso...</div>';
+      return;
+    }
+    if (cg === null) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Error al cargar datos del Congreso.</div>';
+      return;
+    }
+    if (!cg.es_diputado) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Este funcionario no tiene registro como diputado en la Cámara (leg. 50–58).</div>';
+      return;
+    }
+
+    const opcionColor = (op) => {
+      if (!op) return '#888';
+      const o = op.toUpperCase();
+      if (o.includes('AFIRMATIVO')) return '#1A6B3C';
+      if (o.includes('NEGATIVO'))   return '#A32D2D';
+      if (o.includes('ABSTENCI'))   return '#BA7517';
+      return '#888';
+    };
+    const opcionBg = (op) => {
+      if (!op) return 'var(--color-background-secondary)';
+      const o = op.toUpperCase();
+      if (o.includes('AFIRMATIVO')) return '#EAF5EE';
+      if (o.includes('NEGATIVO'))   return '#FAEDEC';
+      if (o.includes('ABSTENCI'))   return '#FDF3E3';
+      return 'var(--color-background-secondary)';
+    };
+
+    const asistencia = cg.asistencia || [];
+    const votaciones = cg.votaciones || [];
+
+    const asistenciaHtml = asistencia.length ? `
+      <div style="margin-bottom:1rem">
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">Asistencia por legislatura</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px">
+          ${asistencia.map(a => {
+            const pct = parseFloat(a.pct_asistencia) || 0;
+            const col = pct >= 75 ? '#1A6B3C' : pct >= 50 ? '#BA7517' : '#A32D2D';
+            return `<div style="padding:8px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);border-left:3px solid ${col}">
+              <div style="font-size:11px;color:var(--color-text-secondary)">Leg. ${a.legislatura_id}</div>
+              <div style="font-size:16px;font-weight:600;color:${col}">${pct}%</div>
+              <div style="font-size:10px;color:var(--color-text-tertiary)">${a.presencias} de ${a.total_sesiones} sesiones</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>` : '';
+
+    const votacionesHtml = votaciones.length ? `
+      <div>
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">Últimas ${votaciones.length} votaciones</div>
+        ${votaciones.map(v => {
+          const fecha = v.fecha ? String(v.fecha).slice(0,10) : '—';
+          const oc = opcionColor(v.opcion);
+          const ob = opcionBg(v.opcion);
+          return `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary)">
+            <span style="font-size:10px;padding:2px 7px;border-radius:99px;background:${ob};color:${oc};font-weight:500;white-space:nowrap;flex-shrink:0">${v.opcion || '—'}</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:12px;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Boletín ${v.boletin || '—'} <span style="color:var(--color-text-tertiary)">(${v.resultado || '—'})</span></div>
+              <div style="font-size:10px;color:var(--color-text-tertiary)">${fecha} · Leg. ${v.legislatura_id}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>` : '<div style="font-size:13px;color:var(--color-text-secondary)">Sin votaciones registradas.</div>';
+
+    el.innerHTML = asistenciaHtml + votacionesHtml;
+
+  } else if (currentTab === 'campana') {
+    const fin = c.financiamiento;
+    if (fin === undefined) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando...</div>';
+      return;
+    }
+    if (fin === null) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Error al cargar datos de campaña.</div>';
+      return;
+    }
+    if (fin.sin_datos) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Sin datos de financiamiento electoral 2024 en SERVEL. Este funcionario puede ser histórico o nacional (no tuvo elección municipal 2024).</div>';
+      return;
+    }
+
+    const r = fin.resumen || {};
+    const donantes = fin.donantes || [];
+    const gastos   = fin.gastos   || [];
+    const alertas  = fin.alertas_donante || [];
+
+    const fmtPesos = (n) => {
+      if (!n || n == 0) return '$0';
+      n = parseInt(n);
+      if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + ' mil mill.';
+      if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + ' M';
+      return '$' + n.toLocaleString('es-CL');
+    };
+
+    const alertasHtml = alertas.length ? `
+      <div style="margin-bottom:14px">
+        <div style="font-size:12px;font-weight:500;color:#A32D2D;margin-bottom:6px">Alertas DONANTE_PROVEEDOR</div>
+        ${alertas.map(a => `
+          <div style="padding:8px 10px;border:0.5px solid #A32D2D;border-radius:var(--border-radius-md);margin-bottom:5px;background:#FAEDEC22">
+            <div style="font-size:11px;font-weight:500;color:#A32D2D;margin-bottom:3px">${a.gravedad} · ${a.tipo}</div>
+            <div style="font-size:12px;color:var(--color-text-primary)">${a.detalle}</div>
+          </div>`).join('')}
+      </div>` : '';
+
+    el.innerHTML = `
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:10px">Elecciones Municipales 2024 — Fuente: SERVEL (datos definitivos)</div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:14px">
+        <div class="score-card"><div class="score-num" style="color:#1A6B3C;font-size:16px">${fmtPesos(r.total_ingresos)}</div><div class="score-label">Total ingresos</div></div>
+        <div class="score-card"><div class="score-num" style="color:#A32D2D;font-size:16px">${fmtPesos(r.total_gastos)}</div><div class="score-label">Total gastos</div></div>
+        <div class="score-card"><div class="score-num">${(r.n_transacciones||0).toLocaleString()}</div><div class="score-label">Transacciones</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:14px">
+        Partido: ${r.partido||'—'} · Pacto: ${r.pacto||'—'} · Territorio: ${r.territorio||'—'}
+      </div>
+
+      ${alertasHtml}
+
+      <div style="padding:10px 12px;background:#EAF0F618;border:0.5px solid #1A3C5E33;border-radius:var(--border-radius-md);margin-bottom:12px;font-size:12px;color:var(--color-text-secondary);line-height:1.6">
+        <strong style="color:var(--color-text-primary)">¿De donde viene el dinero de campana?</strong><br>
+        <span style="padding:1px 6px;border-radius:99px;background:#EAF0F6;color:#1A3C5E;font-weight:500;font-size:11px">Fisco</span> = Fondos publicos — tu plata como contribuyente. El Estado financia campannas para reducir la dependencia de privados.<br>
+        <span style="padding:1px 6px;border-radius:99px;background:#E6F6F2;color:#0F6E56;font-weight:500;font-size:11px">Persona natural</span> = Un ciudadano que aporto de su propio bolsillo.<br>
+        <span style="padding:1px 6px;border-radius:99px;background:#EEEDFE;color:#534AB7;font-weight:500;font-size:11px">Empresa</span> = En Chile las empresas NO pueden aportar directamente. Si aparece una, es una persona que tributa como empresa (EIRL, SPA, etc.).<br>
+        <strong style="color:#A32D2D">Alerta:</strong> Si un aportante privado tambien es proveedor del Estado, la IA lo marca como DONANTE_PROVEEDOR.
+      </div>
+
+      ${donantes.length ? `
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">Principales aportantes</div>
+        ${donantes.slice(0,10).map(d => {
+          const esFisco = (d.nombre_donante||'').toUpperCase().includes('FISCO');
+          const badgeColor = esFisco ? '#1A3C5E' : '#534AB7';
+          const badgeBg   = esFisco ? '#EAF0F6'  : '#EEEDFE';
+          const badgeTxt  = esFisco ? 'Fisco (publico)' : 'Privado';
+          return `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary)">
+            <div style="flex:1;min-width:0;margin-right:8px">
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                <span style="font-size:12px;color:var(--color-text-primary)">${d.nombre_donante||'—'}</span>
+                <span style="font-size:10px;padding:1px 6px;border-radius:99px;background:${badgeBg};color:${badgeColor};font-weight:500">${badgeTxt}</span>
+              </div>
+              ${d.rut_donante ? `<div style="font-size:10px;color:var(--color-text-tertiary)">RUT: ${d.rut_donante}</div>` : ''}
+            </div>
+            <span style="font-size:12px;font-weight:500;color:#1A3C5E;white-space:nowrap">${fmtPesos(d.monto_total)}</span>
+          </div>`;
+        }).join('')}
+      ` : '<div style="font-size:13px;color:var(--color-text-secondary)">Sin aportantes identificados.</div>'}
+
+      ${gastos.length ? `
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-top:14px;margin-bottom:6px">Gastos por concepto</div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:8px">En que gasto el dinero de campana. Todo debe estar documentado en SERVEL — si aparece algo raro o desproporcionado, puede ser indicio de irregularidad.</div>
+        ${gastos.slice(0,8).map(g => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary)">
+            <div style="font-size:12px;color:var(--color-text-secondary);flex:1;margin-right:8px">${g.descripcion}</div>
+            <span style="font-size:12px;font-weight:500;color:#A32D2D;white-space:nowrap">${fmtPesos(g.monto_total)}</span>
+          </div>`).join('')}
+      ` : ''}
+    `;
+
+  } else if (currentTab === 'licitaciones') {
+    const lic = c.licitaciones;
+    if (lic === undefined) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando...</div>';
+      return;
+    }
+    if (lic === null) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Error al cargar licitaciones.</div>';
+      return;
+    }
+    const r = lic.resumen || {};
+    const items = lic.data || [];
+    const fmtP = (n) => {
+      if (!n) return '$0';
+      if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + ' mil millones';
+      if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + ' millones';
+      return '$' + n.toLocaleString('es-CL');
+    };
+    if (!r.total_licitaciones) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Sin licitaciones adjudicadas a empresas de este funcionario registradas.</div>';
+      return;
+    }
+    el.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:14px">
+        <div class="score-card"><div class="score-num">${r.total_licitaciones}</div><div class="score-label">Licitaciones</div></div>
+        <div class="score-card"><div class="score-num" style="font-size:16px">${fmtP(r.monto_total_pesos)}</div><div class="score-label">Monto adjudicado</div></div>
+        <div class="score-card"><div class="score-num">${r.organismos_distintos}</div><div class="score-label">Organismos</div></div>
+      </div>
+      <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:8px">
+        Período: ${r.primera ? String(r.primera).slice(0,10) : '—'} → ${r.ultima ? String(r.ultima).slice(0,10) : '—'}
+      </div>
+      ${items.slice(0,30).map(l => `
+        <div style="padding:8px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin-bottom:5px">
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:6px">
+            <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);flex:1">${l.nombre_organismo || '—'}</div>
+            <div style="font-size:11px;color:var(--color-text-tertiary);flex-shrink:0">${l.fecha_adjudicacion ? String(l.fecha_adjudicacion).slice(0,10) : '—'}</div>
+          </div>
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px">${l.nombre_adjudicatario || ''}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+            <span style="font-size:10px;color:var(--color-text-tertiary)">${l.codigo || ''}</span>
+            <span style="font-size:11px;font-weight:500;color:#1A3C5E">${fmtP(l.monto_adjudicado)}</span>
+          </div>
+          ${l.link ? `<a href="${l.link}" target="_blank" style="font-size:10px;color:#1A3C5E;text-decoration:underline">Ver licitación</a>` : ''}
+        </div>`).join('')}
+      ${items.length > 30 ? `<div style="font-size:12px;color:var(--color-text-secondary);text-align:center;padding:8px">Mostrando 30 de ${r.total_licitaciones} licitaciones</div>` : ''}
+    `;
+
+  } else if (currentTab === 'mercado') {
+    const ord = c.ordenes;
+    if (ord === undefined) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando...</div>';
+      return;
+    }
+    if (ord === null) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Error al cargar datos de Mercado Público.</div>';
+      return;
+    }
+    const r = ord.resumen || {};
+    const ocs = ord.data || [];
+    if (!r.total_ocs) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Sin órdenes de compra registradas donde empresas de este funcionario sean proveedoras del estado.</div>';
+      return;
+    }
+    const fmtPesos = (n) => {
+      if (!n) return '$0';
+      if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + ' mil millones';
+      if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + ' millones';
+      return '$' + n.toLocaleString('es-CL');
+    };
+    el.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:14px">
+        <div class="score-card"><div class="score-num">${r.total_ocs}</div><div class="score-label">Ordenes de compra</div></div>
+        <div class="score-card"><div class="score-num" style="font-size:16px">${fmtPesos(r.monto_total_pesos)}</div><div class="score-label">Monto total</div></div>
+        <div class="score-card"><div class="score-num">${r.organismos_distintos}</div><div class="score-label">Organismos distintos</div></div>
+      </div>
+      <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:8px">
+        Período: ${r.primera_oc ? String(r.primera_oc).slice(0,10) : '—'} → ${r.ultima_oc ? String(r.ultima_oc).slice(0,10) : '—'}
+      </div>
+      ${ocs.slice(0,30).map(o => `
+        <div style="padding:8px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin-bottom:5px">
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:6px">
+            <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);flex:1">${o.nombre_organismo || '—'}</div>
+            <div style="font-size:11px;color:var(--color-text-tertiary);flex-shrink:0">${o.fecha_creacion ? String(o.fecha_creacion).slice(0,10) : '—'}</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:3px">
+            <span style="font-size:11px;color:var(--color-text-secondary)">${o.codigo || ''}</span>
+            <span style="font-size:11px;font-weight:500;color:#1A3C5E">${fmtPesos(o.monto_pesos)}</span>
+          </div>
+          ${o.estado ? `<span style="font-size:10px;padding:1px 6px;border-radius:99px;background:var(--color-background-secondary);color:var(--color-text-secondary)">${o.estado}</span>` : ''}
+        </div>`).join('')}
+      ${ocs.length > 30 ? `<div style="font-size:12px;color:var(--color-text-secondary);text-align:center;padding:8px">Mostrando 30 de ${r.total_ocs} órdenes</div>` : ''}
+    `;
+
+  } else if (currentTab === 'declaraciones') {
+    const decls = c.declaraciones;
+
+    if (decls === undefined) {
+      // Aun cargando (setTab async todavia no terminó)
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando declaraciones...</div>';
+      return;
+    }
+
+    if (decls === null) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Error al cargar declaraciones. Verifica que el servidor esté activo.</div>';
+      return;
+    }
+
+    if (!decls.length) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Sin declaraciones de probidad registradas en CPLT para este funcionario.</div>';
+      return;
+    }
+
+    const tipoColor = (t) => {
+      if (!t) return '#888';
+      const tl = t.toUpperCase();
+      if (tl.includes('INGRESO')) return '#1A3C5E';
+      if (tl.includes('EGRESO')) return '#A32D2D';
+      if (tl.includes('ACTUALIZACION') || tl.includes('ACTUALIZACIÓN')) return '#1A6B3C';
+      return '#BA7517';
+    };
+
+    el.innerHTML = `
+      <div style="margin-bottom:8px;font-size:12px;color:var(--color-text-secondary)">${decls.length} declaración(es) registrada(s) en InfoProbidad (CPLT)</div>
+      ${decls.map(d => {
+        const tc = tipoColor(d.tipo);
+        const fechaDecl = d.fecha_declaracion ? String(d.fecha_declaracion).slice(0,10) : null;
+        const fechaAsun = d.fecha_asuncion ? String(d.fecha_asuncion).slice(0,10) : null;
+        return `
+        <div style="padding:10px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin-bottom:6px;border-left:3px solid ${tc}">
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:8px;flex-wrap:wrap">
+            <span style="font-size:11px;padding:2px 8px;border-radius:99px;background:${tc}18;color:${tc};font-weight:500">${d.tipo || 'Sin tipo'}</span>
+            ${fechaDecl ? `<span style="font-size:11px;color:var(--color-text-tertiary);flex-shrink:0">Declarada: ${fechaDecl}</span>` : ''}
+          </div>
+          <div style="margin-top:6px;font-size:13px;font-weight:500;color:var(--color-text-primary)">${d.institucion || '—'}</div>
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px">Cargo: ${d.cargo || '—'}</div>
+          ${d.regimen_pat ? `<div style="font-size:11px;color:var(--color-text-secondary)">Régimen: ${d.regimen_pat}</div>` : ''}
+          ${fechaAsun ? `<div style="font-size:11px;color:var(--color-text-secondary)">Asunción al cargo: ${fechaAsun}</div>` : ''}
+          ${d.uri_declaracion ? `<a href="${d.uri_declaracion}" target="_blank" style="font-size:11px;color:#1A3C5E;margin-top:6px;display:inline-block;text-decoration:underline">Ver declaración original</a>` : ''}
+        </div>`;
+      }).join('')}
+    `;
+
+  } else if (currentTab === 'proyectos') {
+    const proy = c.proyectos;
+    if (proy === undefined) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando proyectos de ley...</div>';
+      return;
+    }
+    if (proy === null) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Error al cargar proyectos de ley.</div>';
+      return;
+    }
+    if (proy.sin_datos) {
+      el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Sin proyectos de ley registrados (no es diputado o no tiene mociones en BCN).</div>';
+      return;
+    }
+    const lista = proy.data || [];
+    const total = proy.meta?.total || lista.length;
+    el.innerHTML = `
+      <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:10px">
+        ${total} mocion${total !== 1 ? 'es' : ''} presentada${total !== 1 ? 's' : ''} en la Cámara de Diputados
+      </div>
+      ${lista.map(p => `
+        <div style="padding:9px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:6px">
+            <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);flex:1;line-height:1.4">${p.titulo || 'Sin título'}</div>
+            <div style="font-size:11px;color:var(--color-text-tertiary);flex-shrink:0">${p.fecha_ingreso ? String(p.fecha_ingreso).slice(0,10) : '—'}</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:4px;align-items:center">
+            <span style="font-size:11px;font-weight:500;color:#1A3C5E">Boletín ${p.boletin}</span>
+            ${p.legislatura ? `<span style="font-size:10px;color:var(--color-text-tertiary)">Leg. ${p.legislatura}</span>` : ''}
+            ${p.link ? `<a href="${p.link}" target="_blank" style="font-size:10px;color:#1A3C5E;text-decoration:underline;margin-left:auto">Ver en BCN</a>` : ''}
+          </div>
+        </div>`).join('')}
+      ${total > lista.length ? `<div style="font-size:12px;color:var(--color-text-secondary);text-align:center;padding:8px">Mostrando ${lista.length} de ${total} mociones</div>` : ''}
+    `;
+  }
+}
+
+function scoreColor(v) {
+  if (v == null || v === undefined) return '#888';
+  return v >= 75 ? '#1A6B3C' : v >= 50 ? '#BA7517' : '#A32D2D';
+}
+function scoreBg(v) {
+  if (v == null || v === undefined) return 'var(--color-background-secondary)';
+  return v >= 75 ? '#EAF5EE' : v >= 50 ? '#FDF3E3' : '#FAEDEC';
+}
+function scoreLabel(v) {
+  if (v == null || v === undefined) return 'Sin score';
+  return v >= 75 ? 'Transparente' : v >= 50 ? 'Moderado' : 'Bajo';
+}
+function scoreTooltipText(v) {
+  if (v == null) return '';
+  const factors = [];
+  if (v >= 75) {
+    factors.push('+ Declaracion CPLT reciente (+25)');
+    factors.push('+ Empresas declaradas (+20)');
+    factors.push('+ Sujeto de lobby (+20)');
+    factors.push('+ Sin alertas graves (+15)');
+  } else if (v >= 50) {
+    factors.push('Cumple parcialmente. Puede tener declaracion antigua o alerta media.');
+    factors.push('Penalizaciones posibles: -10 alerta MEDIA, -15 declaracion antigua.');
+  } else {
+    factors.push('Factores que bajan el puntaje:');
+    factors.push('- Alerta ALTA (-20)');
+    factors.push('- Alerta MEDIA (-10)');
+    factors.push('- Declaracion antigua (-15)');
+    factors.push('Sin puntaje base sin declaracion en CPLT.');
+  }
+  return `Score ${v}/100 — ${scoreLabel(v)}\n${factors.join('\n')}`;
+}
+function scoreBadge(v, size) {
+  if (v == null || v === undefined) return '';
+  const c = scoreColor(v), bg = scoreBg(v);
+  const fs = size === 'lg' ? '13px' : '10px';
+  const px = size === 'lg' ? '4px 10px' : '2px 7px';
+  const tip = scoreTooltipText(v).replace(/"/g, '&quot;');
+  return `<span title="${tip}" style="font-size:${fs};padding:${px};border-radius:99px;background:${bg};color:${c};font-weight:500;white-space:nowrap;cursor:help">${v} · ${scoreLabel(v)}</span>`;
+}
+
+
+let _alertadosCache = null;
+async function renderAlertados() {
+  const el = document.getElementById('alertadosContent');
+  if (!el) return;
+  if (_alertadosCache) {
+    const countEl = document.getElementById('alertadosFilterCount');
+    if (countEl) countEl.textContent = `${(_alertadosCache.data||[]).length} funcionarios con alertas detectadas`;
+    _renderAlertadosHtml(_alertadosCache);
+    return;
+  }
+  el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando alertas...</div>';
+  try {
+    const res = await fetch(`${API}/api/alertados`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    _alertadosCache = json;
+    const countEl = document.getElementById('alertadosFilterCount');
+    if (countEl) countEl.textContent = `${(json.data||[]).length} funcionarios con alertas detectadas`;
+    _renderAlertadosHtml(json);
+  } catch(e) {
+    el.innerHTML = `<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Error al cargar alertas: ${e.message}</div>`;
+  }
+}
+
+function _renderAlertadosHtml(json) {
+  const el = document.getElementById('alertadosContent');
+  const lista = json.data || [];
+  if (!lista.length) {
+    el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Sin alertas registradas.</div>';
+    return;
+  }
+
+  const tipoDesc = {
+    'AUTOLOBBY_DETECTADO':       'Hizo lobby ante una empresa en la que tiene participacion societaria declarada',
+    'DIRECTOR_NO_DECLARADO':     'Figura como director en el CMF pero no lo declaro en su declaracion de patrimonio',
+    'CONFLICTO_FAMILIAR_POSIBLE':'Apellido poco comun compartido con entidades que hicieron lobby ante este funcionario',
+    'DONANTE_PROVEEDOR':         'Una empresa que le financi la campana tambien fue proveedora del Estado'
+  };
+
+  // Separar por gravedad
+  const altas  = lista.filter(c => c.alertas.some(a => a.gravedad === 'ALTA'));
+  const medias  = lista.filter(c => !altas.includes(c) && c.alertas.some(a => a.gravedad === 'MEDIA'));
+  const bajas   = lista.filter(c => !altas.includes(c) && !medias.includes(c));
+
+  const renderGrupo = (titulo, grupo, borderColor, bgColor) => {
+    if (!grupo.length) return '';
+    return `
+      <div style="margin-bottom:1.5rem">
+        <div style="font-size:12px;font-weight:500;color:${borderColor};text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">${titulo} — ${grupo.length} funcionario${grupo.length!==1?'s':''}</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px">
+          ${grupo.map(c => {
+            const {color, bg} = candidateStyle(c);
+            const initials = getInitials(c);
+            const alertasUnicas = [...new Map(c.alertas.map(a => [a.tipo, a])).values()];
+            return `
+              <div onclick="irACandidato(${c.id})" style="padding:12px;border:0.5px solid ${borderColor};border-radius:var(--border-radius-md);cursor:pointer;border-left:3px solid ${borderColor};background:${bgColor};transition:box-shadow .15s" onmouseenter="this.style.boxShadow='0 2px 8px ${borderColor}33'" onmouseleave="this.style.boxShadow=''">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                  <div class="avatar" style="background:${bg};color:${color};width:34px;height:34px;font-size:12px;flex-shrink:0">${initials}</div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${displayName(c)}</div>
+                    <div style="font-size:11px;color:var(--color-text-secondary)">${c.cargo||''} · ${c.comuna||''}</div>
+                  </div>
+                  ${scoreBadge(c.score_transparencia, 'sm')}
+                </div>
+                ${alertasUnicas.map(a => {
+                  const gc = a.gravedad==='ALTA'?'#A32D2D':a.gravedad==='MEDIA'?'#BA7517':'#888';
+                  return `<div style="margin-bottom:4px">
+                    <span style="font-size:10px;padding:1px 7px;border-radius:99px;background:${gc}18;color:${gc};font-weight:500">${a.gravedad}</span>
+                    <span style="font-size:11px;color:var(--color-text-secondary);margin-left:4px">${a.tipo.replace(/_/g,' ')}</span>
+                    ${a.detalle ? `<div style="font-size:11px;color:var(--color-text-tertiary);margin-top:2px;line-height:1.4">${a.detalle.slice(0,120)}${a.detalle.length>120?'…':''}</div>` : ''}
+                  </div>`;
+                }).join('')}
+              </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+  };
+
+  el.innerHTML =
+    renderGrupo('Gravedad Alta', altas,  '#A32D2D', '#FAEDEC0A') +
+    renderGrupo('Gravedad Media', medias, '#BA7517', '#FDF3E30A') +
+    renderGrupo('Gravedad Baja', bajas,  '#888',    'var(--color-background-secondary)');
+}
+
+function irACandidato(id) {
+  const candidatosBtn = document.querySelectorAll('.nav-btn')[0];
+  setView('candidatos', candidatosBtn);
+  selectCandidate(id);
+}
+
+function irAVistaAlertados() {
+  const btn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.textContent.trim() === 'Alertas IA');
+  if (btn) setView('alertados', btn);
+}
+
+function filtrarAlertados() {
+  if (!_alertadosCache) return;
+  const q     = (document.getElementById('alertadosSearch')?.value  || '').toLowerCase().trim();
+  const grav  = (document.getElementById('alertadosGravedad')?.value || '').toUpperCase();
+  const tipo  = (document.getElementById('alertadosTipo')?.value    || '').toUpperCase();
+
+  const full  = _alertadosCache.data || [];
+  const filtrado = full.filter(c => {
+    if (q && !displayName(c).toLowerCase().includes(q) && !(c.cargo||'').toLowerCase().includes(q)) return false;
+    if (grav && !c.alertas.some(a => a.gravedad === grav)) return false;
+    if (tipo && !c.alertas.some(a => a.tipo === tipo)) return false;
+    return true;
+  });
+
+  const countEl = document.getElementById('alertadosFilterCount');
+  if (countEl) {
+    countEl.textContent = (q || grav || tipo)
+      ? `Mostrando ${filtrado.length} de ${full.length} funcionarios con alertas`
+      : `${full.length} funcionarios con alertas detectadas`;
+  }
+
+  _renderAlertadosHtml({ data: filtrado });
+}
+
+function renderGuia() {
+  const el = document.getElementById('guiaContent');
+  if (!el) return;
+  const secciones = [
+    {
+      icon: '📋',
+      titulo: 'Declaracion de Patrimonio (CPLT)',
+      color: '#1A3C5E',
+      bg: '#EAF0F6',
+      texto: 'Todo funcionario publico esta obligado por ley a declarar sus bienes, empresas y deudas al asumir y al dejar su cargo. Estos datos vienen de InfoProbidad (datos.cplt.cl). Si un funcionario no declara, puede enfrentar sanciones administrativas.',
+      items: [
+        { label: 'Declaracion de ingreso', desc: 'La presenta al asumir el cargo. Es la "foto inicial" de su patrimonio.' },
+        { label: 'Actualizacion periodica', desc: 'La presenta anualmente. Permite ver si su patrimonio creci inusualmente durante el cargo.' },
+        { label: 'Declaracion de egreso', desc: 'La presenta al salir del cargo. Permite comparar con la de ingreso.' },
+      ]
+    },
+    {
+      icon: '🏢',
+      titulo: 'Empresas Declaradas',
+      color: '#0F6E56',
+      bg: '#E6F6F2',
+      texto: 'Muestra en que empresas el funcionario tiene acciones o participacion societaria, segun su propia declaracion. Un funcionario que toma decisiones que benefician a empresas que el mismo posee tiene un conflicto de interes.',
+      items: [
+        { label: 'Participacion', desc: 'El % de la empresa que le pertenece. Si es 0%, puede ser accion simbolica o dato incompleto en la fuente.' },
+        { label: 'RUT de la empresa', desc: 'Permite cruzar con licitaciones, ordenes de compra y registro SII.' },
+      ]
+    },
+    {
+      icon: '🤝',
+      titulo: 'Reunion de Lobby (Ley 20.730)',
+      color: '#534AB7',
+      bg: '#EEEDFE',
+      texto: 'La Ley de Lobby obliga a los funcionarios a registrar sus reuniones con privados que buscan influir en sus decisiones. Cada reunion tiene un acta oficial publica.',
+      items: [
+        { label: 'Empresa lobbied', desc: 'Quien intento influir en el funcionario — puede ser una empresa, ONG o persona natural.' },
+        { label: 'Giro', desc: 'El rubro de la entidad que hizo lobby. Permite detectar si el funcionario favoreci a un sector especifico.' },
+        { label: 'Ver acta oficial', desc: 'Link al registro oficial en datos.infolobby.cl — documento publico con todos los detalles.' },
+      ]
+    },
+    {
+      icon: '🚨',
+      titulo: 'Alertas de la IA Fiscalizadora',
+      color: '#A32D2D',
+      bg: '#FAEDEC',
+      texto: 'Nuestra inteligencia artificial cruza automaticamente declaraciones, lobby, licitaciones y donaciones para detectar posibles conflictos de interes. No son condenas — son senales para que el ciudadano investigue mas.',
+      items: [
+        { label: 'AUTOLOBBY', desc: 'El funcionario recibi lobby de una empresa en la que el mismo tiene acciones declaradas. Eso se llama autolobby.' },
+        { label: 'DIRECTOR NO DECLARADO', desc: 'La CMF lo registra como director de una empresa, pero no aparece en su declaracion de patrimonio.' },
+        { label: 'CONFLICTO FAMILIAR', desc: 'Un apellido poco comun aparece tanto en el funcionario como en quien hizo lobby. Sugiere posible vinculo familiar.' },
+        { label: 'DONANTE PROVEEDOR', desc: 'Quien financi su campana tambien le vendio al Estado. Puede indicar favores cruzados.' },
+      ]
+    },
+    {
+      icon: '📊',
+      titulo: 'Financiamiento de Campana (SERVEL)',
+      color: '#BA7517',
+      bg: '#FDF3E3',
+      texto: 'Para elecciones municipales (alcaldes, concejales), el SERVEL publica todos los ingresos y gastos de campana. Esta informacion es clave para saber quien paga las campanas de los candidatos.',
+      items: [
+        { label: 'Fisco como aportante', desc: 'Es plata TUYA como ciudadano — el Estado financia a los candidatos con fondos publicos para reducir la influencia privada.' },
+        { label: 'Persona natural', desc: 'Un ciudadano que aporto dinero de su propio bolsillo.' },
+        { label: 'Empresa aportante', desc: 'En Chile las empresas NO pueden aportar directamente. Si aparece una, puede ser una persona que tributa como empresa (EIRL, SPA, etc.).' },
+        { label: 'Gastos por concepto', desc: 'En que gast el candidato. Incluye publicidad, personal, materiales, transporte, etc. Todo debe estar documentado en SERVEL.' },
+      ]
+    },
+    {
+      icon: '🛒',
+      titulo: 'Mercado Publico y Licitaciones',
+      color: '#C8960C',
+      bg: '#FEF7E6',
+      texto: 'Cuando el Estado necesita comprar algo (servicios, obras, productos), lo hace a traves de Mercado Publico. Si una empresa del funcionario le vende al Estado, existe un potencial conflicto de interes.',
+      items: [
+        { label: 'Orden de compra (OC)', desc: 'Compra directa del Estado a un proveedor. Son de menor cuantia y sin concurso publico.' },
+        { label: 'Licitacion', desc: 'Concurso publico donde el Estado selecciona al mejor proveedor. Son de mayor monto y mas reguladas.' },
+        { label: 'Organismo comprador', desc: 'El servicio del Estado que hizo la compra. Si el funcionario trabaja ahi y su empresa le vende, es conflicto directo.' },
+      ]
+    },
+    {
+      icon: '🗳️',
+      titulo: 'Score de Transparencia',
+      color: '#1A6B3C',
+      bg: '#EAF5EE',
+      texto: 'Es un puntaje del 0 al 100 que calculamos automaticamente a partir de los datos disponibles. NO mide si alguien es corrupto — mide que tan bien documentado y sin alertas esta ese funcionario en los sistemas publicos.',
+      items: [
+        { label: 'Verde (75-100)', desc: 'Tiene declaraciones recientes, empresas declaradas, es sujeto activo de lobby y no tiene alertas graves.' },
+        { label: 'Amarillo (50-74)', desc: 'Cumple parcialmente. Puede tener declaraciones viejas o alguna alerta de baja gravedad.' },
+        { label: 'Rojo (0-49)', desc: 'Tiene alertas graves, declaracion muy antigua o informacion incompleta. Merece atencion ciudadana.' },
+      ]
+    },
+  ];
+
+  el.innerHTML = secciones.map(s => `
+    <div style="margin-bottom:1.25rem;padding:14px 16px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);border-left:3px solid ${s.color}">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span style="font-size:20px">${s.icon}</span>
+        <div style="font-size:14px;font-weight:500;color:var(--color-text-primary)">${s.titulo}</div>
+      </div>
+      <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px;line-height:1.6">${s.texto}</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${s.items.map(i => `
+          <div style="display:flex;gap:8px;align-items:start">
+            <span style="font-size:11px;padding:2px 8px;border-radius:99px;background:${s.bg};color:${s.color};font-weight:500;white-space:nowrap;flex-shrink:0;margin-top:1px">${i.label}</span>
+            <span style="font-size:12px;color:var(--color-text-secondary);line-height:1.5">${i.desc}</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function renderPartidos() {
+  document.getElementById('partidoGrid').innerHTML = partidos.map(p=>`
+    <div style="border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px;border-top:3px solid ${p.color}">
+      <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">${p.nombre}</div>
+      <div style="font-size:11px;margin-bottom:6px"><span style="padding:2px 7px;border-radius:99px;background:${p.color}22;color:${p.color};font-weight:500">${p.ideo}</span></div>
+      <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:6px">${p.desc}</div>
+      <div style="font-size:11px;color:var(--color-text-tertiary)">${p.miembros} congresistas · fundado ${p.fundado}</div>
+    </div>`).join('');
+}
+
+function renderHistorial() {
+  const leyes = [
+    {nombre:"Ley de Transparencia Fiscal",año:2024,resultado:"Aprobada",tipo:"Transparencia",afavor:89,contra:51},
+    {nombre:"Reforma al Sistema Previsional",año:2024,resultado:"Rechazada",tipo:"Previsión",afavor:68,contra:72},
+    {nombre:"Royalty Minero Progresivo",año:2023,resultado:"Aprobada",tipo:"Economía",afavor:78,contra:62},
+    {nombre:"Ley Karin — Acoso Laboral",año:2024,resultado:"Aprobada",tipo:"Laboral",afavor:134,contra:6},
+    {nombre:"Ley de Quórum Calificado",año:2023,resultado:"Aprobada",tipo:"Constitucional",afavor:93,contra:47},
+    {nombre:"Presupuesto Defensa 2024",año:2024,resultado:"Aprobado",tipo:"Presupuesto",afavor:88,contra:52},
+  ];
+  document.getElementById('historialContent').innerHTML = `
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead><tr style="border-bottom:1px solid var(--color-border-secondary)">
+        <th style="text-align:left;padding:8px;font-weight:500;color:var(--color-text-secondary)">Ley / Proyecto</th>
+        <th style="padding:8px;font-weight:500;color:var(--color-text-secondary)">Año</th>
+        <th style="padding:8px;font-weight:500;color:var(--color-text-secondary)">Resultado</th>
+        <th style="padding:8px;font-weight:500;color:var(--color-text-secondary)">A favor</th>
+        <th style="padding:8px;font-weight:500;color:var(--color-text-secondary)">En contra</th>
+        <th style="padding:8px;font-weight:500;color:var(--color-text-secondary)">Tipo</th>
+      </tr></thead>
+      <tbody>${leyes.map((l,i)=>`
+        <tr style="border-bottom:0.5px solid var(--color-border-tertiary);background:${i%2?'var(--color-background-secondary)':'var(--color-background-primary)'}">
+          <td style="padding:9px 8px;color:var(--color-text-primary)">${l.nombre}</td>
+          <td style="padding:9px 8px;text-align:center;color:var(--color-text-secondary)">${l.año}</td>
+          <td style="padding:9px 8px;text-align:center"><span style="padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500;background:${l.resultado.includes('Apro')?'var(--color-background-success)':'var(--color-background-danger)'};color:${l.resultado.includes('Apro')?'var(--color-text-success)':'var(--color-text-danger)'}">${l.resultado}</span></td>
+          <td style="padding:9px 8px;text-align:center;color:#1A6B3C;font-weight:500">${l.afavor}</td>
+          <td style="padding:9px 8px;text-align:center;color:#A32D2D;font-weight:500">${l.contra}</td>
+          <td style="padding:9px 8px;text-align:center"><span class="info-pill">${l.tipo}</span></td>
+        </tr>`).join('')}</tbody>
+    </table></div>`;
+}
+
+function renderCompareSelects() {
+  const opts = allCandidates.map(c=>`<option value="${c.id}">${displayName(c)}</option>`).join('');
+  document.getElementById('cmp1').innerHTML = opts || '<option>Carga candidatos primero</option>';
+  document.getElementById('cmp2').innerHTML = opts || '<option>Carga candidatos primero</option>';
+  if (allCandidates.length > 1) document.getElementById('cmp2').selectedIndex = 1;
+}
+
+async function renderCompare() {
+  const id1 = +document.getElementById('cmp1').value;
+  const id2 = +document.getElementById('cmp2').value;
+  const out = document.getElementById('compareResult');
+  if (id1 === id2) { out.innerHTML='<div style="color:var(--color-text-secondary);font-size:13px">Selecciona dos candidatos distintos</div>'; return; }
+  out.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px">Cargando...</div>';
+  try {
+    const [r1, r2] = await Promise.all([fetch(`${API}/api/candidatos/${id1}`), fetch(`${API}/api/candidatos/${id2}`)]);
+    const [c1, c2] = await Promise.all([r1.json(), r2.json()]);
+    const rows = [
+      ['Cargo', c1.cargo||'—', c2.cargo||'—', false],
+      ['Comuna', c1.comuna||'—', c2.comuna||'—', false],
+      ['Empresas declaradas', (c1.empresas||[]).length, (c2.empresas||[]).length, true],
+      ['Reuniones lobby', (c1.lobby||[]).length, (c2.lobby||[]).length, false],
+      ['Alertas IA', (c1.alertas||[]).length, (c2.alertas||[]).length, false],
+    ];
+    out.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 2fr 2fr;gap:0;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);overflow:hidden;font-size:13px">
+        <div style="background:var(--color-background-secondary);padding:10px 12px;font-weight:500;color:var(--color-text-secondary)"></div>
+        ${[c1,c2].map(c=>{const {color,bg}=candidateStyle(c);return`<div style="padding:10px 12px;background:var(--color-background-secondary);border-left:0.5px solid var(--color-border-tertiary)">
+          <div style="font-weight:500;color:var(--color-text-primary)">${displayName(c)}</div>
+          <span class="ideo-badge" style="font-size:10px;background:${bg};color:${color}">${c.cargo||'—'}</span>
+        </div>`}).join('')}
+        ${rows.map(([l,v1,v2,num])=>{
+          const hi = num && parseFloat(v1)>parseFloat(v2);
+          const lo = num && parseFloat(v1)<parseFloat(v2);
+          return `<div style="padding:8px 12px;background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)">${l}</div>
+          <div style="padding:8px 12px;background:var(--color-background-primary);border-left:0.5px solid var(--color-border-tertiary);border-top:0.5px solid var(--color-border-tertiary);color:${hi?'#1A6B3C':lo?'#A32D2D':'var(--color-text-primary)'};font-weight:${hi?'500':'400'}">${v1}</div>
+          <div style="padding:8px 12px;background:var(--color-background-primary);border-left:0.5px solid var(--color-border-tertiary);border-top:0.5px solid var(--color-border-tertiary);color:${lo?'#1A6B3C':hi?'#A32D2D':'var(--color-text-primary)'};font-weight:${lo?'500':'400'}">${v2}</div>`;
+        }).join('')}
+      </div>`;
+  } catch(e) {
+    out.innerHTML = `<div style="color:var(--color-text-secondary);font-size:13px">Error al cargar: ${e.message}</div>`;
+  }
+}
+
+function renderFisco() {
+  const items = [
+    {area:"Educación",pct:20,monto:"$9.200 mil millones",color:"#1A6B3C"},
+    {area:"Salud",pct:18,monto:"$8.280 mil millones",color:"#1A3C5E"},
+    {area:"Previsión Social",pct:24,monto:"$11.040 mil millones",color:"#534AB7"},
+    {area:"Defensa",pct:9,monto:"$4.140 mil millones",color:"#A32D2D"},
+    {area:"Vivienda",pct:5,monto:"$2.300 mil millones",color:"#C8960C"},
+    {area:"Seguridad",pct:8,monto:"$3.680 mil millones",color:"#BA7517"},
+    {area:"Infraestructura",pct:7,monto:"$3.220 mil millones",color:"#0F6E56"},
+    {area:"Otros",pct:9,monto:"$4.140 mil millones",color:"#888"},
+  ];
+  document.getElementById('fiscoContent').innerHTML = `
+    <div style="margin-bottom:10px;font-size:12px;color:var(--color-text-secondary)">Presupuesto Nacional 2025 · Total estimado: $46.000 mil millones CLP</div>
+    ${items.map(i=>`
+      <div class="bar-row">
+        <div class="bar-label" style="font-size:13px;color:var(--color-text-primary)">${i.area}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${i.pct*3.2}%;background:${i.color}"></div></div>
+        <div style="font-size:12px;color:var(--color-text-secondary);min-width:180px;text-align:right">${i.monto} (${i.pct}%)</div>
+      </div>`).join('')}
+    <div style="margin-top:1rem;padding:10px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:12px;color:var(--color-text-secondary)">
+      El gasto en Defensa (9%) supera al de Vivienda (5%) y representa el doble de lo que se destina a Infraestructura. Con el costo de un F-16 (~USD 70M) se financian aproximadamente 140 colegios basicos nuevos.
+    </div>`;
+}
+
+async function renderStats() {
+  const el = document.getElementById('statsContent');
+  if (!el) return;
+  el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;text-align:center;padding:2rem">Cargando estadísticas...</div>';
+  try {
+    const res = await fetch(`${API}/api/stats`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const s = await res.json();
+
+    const fmtPesos = (n) => {
+      if (!n) return '$0';
+      if (n >= 1e12) return '$' + (n/1e12).toFixed(1) + ' billones';
+      if (n >= 1e9)  return '$' + (n/1e9).toFixed(1) + ' mil millones';
+      if (n >= 1e6)  return '$' + (n/1e6).toFixed(0) + ' millones';
+      return '$' + n.toLocaleString('es-CL');
+    };
+
+    const scoreTotal = (s.scores.verde || 0) + (s.scores.amarillo || 0) + (s.scores.rojo || 0);
+    const pct = (n) => scoreTotal ? Math.round(n/scoreTotal*100) : 0;
+
+    const alertasPorTipo = {};
+    (s.alertas || []).forEach(a => {
+      if (!alertasPorTipo[a.tipo]) alertasPorTipo[a.tipo] = 0;
+      alertasPorTipo[a.tipo] += a.total;
+    });
+
+    const topCargos = (s.cargos || []).slice(0, 8);
+    const maxCargo = topCargos.reduce((m,c) => Math.max(m, c.total), 1);
+
+    el.innerHTML = `
+      <div style="font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:1rem">Estadísticas del proyecto — datos en tiempo real</div>
+
+      <!-- Candidatos -->
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Funcionarios</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:1.25rem">
+        <div class="score-card"><div class="score-num">${s.candidatos.total.toLocaleString()}</div><div class="score-label">Total funcionarios</div></div>
+        <div class="score-card"><div class="score-num">${s.candidatos.con_rut_real.toLocaleString()}</div><div class="score-label">Con RUT real</div></div>
+        <div class="score-card"><div class="score-num">${s.candidatos.con_declaracion_cplt.toLocaleString()}</div><div class="score-label">Con declaración CPLT</div></div>
+        <div class="score-card" style="background:${scoreBg(s.scores.promedio)}">
+          <div class="score-num" style="color:${scoreColor(s.scores.promedio)}">${s.scores.promedio}</div>
+          <div class="score-label" style="color:${scoreColor(s.scores.promedio)}">Score promedio</div>
+        </div>
+      </div>
+
+      <!-- Score distribución -->
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Distribución de transparencia</div>
+      <div style="margin-bottom:1.25rem">
+        ${[
+          ['Transparente (≥75)', s.scores.verde,    '#1A6B3C', '#EAF5EE'],
+          ['Moderado (50–74)',   s.scores.amarillo,  '#BA7517', '#FDF3E3'],
+          ['Bajo (<50)',         s.scores.rojo,      '#A32D2D', '#FAEDEC'],
+        ].map(([label, n, color, bg]) => `
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <div style="width:130px;font-size:12px;color:var(--color-text-secondary)">${label}</div>
+            <div style="flex:1;height:18px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden">
+              <div style="height:100%;width:${pct(n)}%;background:${color};border-radius:99px;transition:width .5s"></div>
+            </div>
+            <span style="font-size:12px;font-weight:500;color:${color};min-width:70px;text-align:right">${n.toLocaleString()} (${pct(n)}%)</span>
+          </div>`).join('')}
+      </div>
+
+      <!-- Alertas -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em">Alertas de probidad</div>
+        <span style="font-size:11px;color:#1A3C5E;cursor:pointer;text-decoration:underline" onclick="irAVistaAlertados()">Ver todos los alertados →</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:1.25rem">
+        ${Object.entries(alertasPorTipo).map(([tipo, total]) => {
+          const gravColor = tipo.includes('AUTOLOBBY') || tipo.includes('DIRECTOR') ? '#A32D2D' : '#BA7517';
+          return `<div class="score-card" style="border-left:3px solid ${gravColor};cursor:pointer;transition:box-shadow .15s" onclick="irAVistaAlertados()" onmouseenter="this.style.boxShadow='0 2px 8px ${gravColor}44'" onmouseleave="this.style.boxShadow=''">
+            <div class="score-num" style="color:${gravColor}">${total}</div>
+            <div class="score-label">${tipo.replace(/_/g,' ')}</div>
+            <div style="font-size:10px;color:${gravColor};margin-top:3px">Ver alertados →</div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <!-- Datos -->
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Datos vinculados</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:1.25rem">
+        <div class="score-card"><div class="score-num">${s.empresas.participaciones.toLocaleString()}</div><div class="score-label">Participaciones societarias</div></div>
+        <div class="score-card"><div class="score-num">${s.empresas.unicas.toLocaleString()}</div><div class="score-label">Empresas únicas</div></div>
+        <div class="score-card"><div class="score-num">${s.mercado_publico.total_ocs.toLocaleString()}</div><div class="score-label">OCs Mercado Público</div></div>
+        <div class="score-card"><div class="score-num" style="font-size:16px">${fmtPesos(s.mercado_publico.monto_total_pesos)}</div><div class="score-label">Monto total OCs</div></div>
+        <div class="score-card"><div class="score-num">${s.lobby.matches_candidato.toLocaleString()}</div><div class="score-label">Matches lobby</div></div>
+      </div>
+
+      <!-- Cargos -->
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Funcionarios por cargo</div>
+      <div>${topCargos.map(c => `
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">
+          <div style="width:150px;font-size:12px;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.cargo}</div>
+          <div style="flex:1;height:14px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden">
+            <div style="height:100%;width:${Math.round(c.total/maxCargo*100)}%;background:#1A3C5E;border-radius:99px"></div>
+          </div>
+          <span style="font-size:12px;color:var(--color-text-secondary);min-width:45px;text-align:right">${c.total.toLocaleString()}</span>
+        </div>`).join('')}</div>
+    `;
+  } catch(e) {
+    el.innerHTML = `<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Error al cargar estadísticas: ${e.message}. Verifica que el servidor esté activo.</div>`;
+  }
+}
+
+// Carga inicial de candidatos y cargos disponibles
+(async () => {
+  initWelcomeBanner();
+  const el = document.getElementById('candList');
+  el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">Cargando candidatos...</div>';
+  try {
+    const [resCands, resStats] = await Promise.all([
+      fetch(`${API}/api/candidatos?limit=50`),
+      fetch(`${API}/api/stats`).catch(() => null)
+    ]);
+    const json = await resCands.json();
+    allCandidates = json.data || [];
+    displayedCandidates = allCandidates;
+    const countEl = document.getElementById('filterCount');
+    if (countEl) countEl.textContent = `${allCandidates.length} candidatos`;
+    renderCandList();
+
+    // Poblar select de cargos con datos reales
+    if (resStats && resStats.ok) {
+      const stats = await resStats.json();
+      const sel = document.getElementById('cargoFilter');
+      if (sel && stats.cargos) {
+        stats.cargos.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.cargo;
+          opt.textContent = `${c.cargo} (${c.total.toLocaleString()})`;
+          sel.appendChild(opt);
+        });
+      }
+    }
+  } catch(e) {
+    el.innerHTML = '<div style="color:var(--color-text-secondary);font-size:13px;padding:8px">No se pudo conectar a la API (localhost:3000). Asegúrate de que el servidor está corriendo.</div>';
+  }
+})();
+</script>
