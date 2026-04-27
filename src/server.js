@@ -31,6 +31,7 @@ const limiterBusqueda = rateLimit({
 app.use(cors());
 app.use(express.json());
 app.use(limiterGeneral);
+app.use((req, res, next) => { res.setHeader('ngrok-skip-browser-warning', 'true'); next(); });
 
 // Healthcheck liviano — no consulta tablas
 app.get('/health', (req, res) => res.json({ status: 'ok' }));

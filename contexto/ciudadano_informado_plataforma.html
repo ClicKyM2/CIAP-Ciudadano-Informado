@@ -235,10 +235,10 @@ body { font-family: var(--font-sans); background: var(--color-background-tertiar
 </div>
 
 <script>
-// URL de la API: localhost en desarrollo, Railway en producción
+// URL de la API: localhost en desarrollo, ngrok en producción
 const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:3000'
-  : (window.CIAP_API_URL || 'https://api-ciudadana.up.railway.app');
+  : (window.CIAP_API_URL || 'https://gazing-imitate-refined.ngrok-free.dev');
 
 const partidos = [
   {nombre:"Partido Socialista",ideo:"Izquierda",color:"#E24B4A",miembros:84,fundado:1933,desc:"Partido histórico de la centroizquierda chilena, fundado en 1933."},
